@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/%{PEMPERA}.iml" filepath="$PROJECT_DIR$/.idea/%{PEMPERA}.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pempera.iml" filepath="$PROJECT_DIR$/pempera.iml" />
     </modules>
   </component>
 </project>
