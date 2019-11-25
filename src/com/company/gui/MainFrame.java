@@ -1,6 +1,5 @@
 package com.company.gui;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,17 +9,13 @@ import java.awt.event.WindowListener;
 
 
 public class MainFrame extends Frame implements WindowListener, ActionListener {
-    private JButton makeOrderButton;
-    private JButton loadOrderButton;
-    private JButton exitButton;
+    private JButton makeOrderButton, loadOrderButton, exitButton;
+    MakeOrderFrame orderWindow;
 
     public static void main(String[] args){
         MainFrame mainWindow = new MainFrame();
         mainWindow.setSize(340,75);
         mainWindow.setLocation(400,400);
-
-
-
         mainWindow.setVisible(true);
     }
 
@@ -43,10 +38,13 @@ public class MainFrame extends Frame implements WindowListener, ActionListener {
         String command = e.getActionCommand();
         switch (command) {
             case "Load order from file":
-                //Directed to LoadFromFileFrame
+                //load
                 break;
             case "Make order":
-                //Directed to MakeOrderFrame
+                orderWindow = new MakeOrderFrame();
+                orderWindow.setSize(440,175);
+                orderWindow.setLocation(400,450);
+                orderWindow.setVisible(true);
                 break;
             case "Exit":
                 dispose();
