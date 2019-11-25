@@ -19,7 +19,7 @@ public class MainFrame extends Frame implements WindowListener, ActionListener {
         mainWindow.setVisible(true);
     }
 
-    private MainFrame(){
+    public MainFrame(){
         super("Main Window");
         setLayout(new FlowLayout());
         addWindowListener(this);

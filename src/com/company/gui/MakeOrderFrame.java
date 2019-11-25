@@ -27,7 +27,7 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 MakeOrderFrame orderWindow = new MakeOrderFrame();
-                orderWindow.setSize(440,175);
+                orderWindow.setSize(480,175);
                 orderWindow.setLocation(400,450);
                 orderWindow.setVisible(true);
             }
@@ -37,7 +37,12 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
 
     public void addNewOrder(Order o){
         orders.add(o);
-        listModel.addElement(o);
+        String shape = o.getPlateShape().toString();
+        String material = o.getPlateMaterialType().toString();
+        String thickness = o.getPlateThickness().toString();
+        String dimension = o.getDimensions().getDimension_X().toString() +"x" +o.getDimensions().getDimension_Y().toString();
+        String elementName = shape + ", " + material + ", " + thickness + ", " + dimension;
+        listModel.addElement(elementName);
     }
 
     public MakeOrderFrame(){
@@ -54,7 +59,7 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
         add(topPane, BorderLayout.PAGE_START);
 
         componentsListLabel = new JLabel("Elements in order:");
-        listModel = new DefaultListModel<Order>();
+        listModel = new DefaultListModel<String>();
         componentsList = new JList(listModel);
         centralPane = new JLayeredPane();
         centralPane.setLayout(new BoxLayout(centralPane,BoxLayout.PAGE_AXIS));
