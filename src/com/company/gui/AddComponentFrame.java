@@ -1,6 +1,7 @@
 package com.company.gui;
 
 import com.company.entity.Dimensions;
+import com.company.entity.OrderWithQuantity;
 import com.company.entity.Order;
 import com.company.entity.enums.PlateMaterialType;
 import com.company.entity.enums.PlateShape;
@@ -17,11 +18,15 @@ public class AddComponentFrame extends JDialog implements WindowListener, Action
 
     JPanel shapeSelect;
     JButton addComponent;
-    Order order;
+    OrderWithQuantity orderWithQuantity;
+    SpinnerListModel quantitySpinnerModel;
+    JSpinner quantity;
+
     public static void main(String[] args){
         AddComponentFrame orderWindow = new AddComponentFrame();
         orderWindow.setSize(440,175);
         orderWindow.setLocation(400,450);
+        orderWindow.setVisible(true);
     }
 
     public AddComponentFrame(){
@@ -33,6 +38,12 @@ public class AddComponentFrame extends JDialog implements WindowListener, Action
         JPanel triangleRectPanel = new TriangleRectPanel();
         JPanel triangleEquiPanel = new TriangleEquiPanel();
 
+        String[] quantityNumbers = new String[99];
+        getQuantityNumber(quantityNumbers);
+        quantitySpinnerModel= new SpinnerListModel(quantityNumbers);
+        quantity = new JSpinner(quantitySpinnerModel);
+        quantity.setPreferredSize(new Dimension(50,25));
+
         shapeSelect = new JPanel(new CardLayout());
         shapeSelect.add(rectanglePanel, "Rectangle");
         shapeSelect.add(triangleRectPanel, "Rectangle triangle");
@@ -43,6 +54,7 @@ public class AddComponentFrame extends JDialog implements WindowListener, Action
         shapeChoose.setEditable(false);
         shapeChoose.addItemListener(this);
         comboBoxShape.add(shapeChoose);
+        comboBoxShape.add(quantity);
 
         add(comboBoxShape, BorderLayout.PAGE_START);
         add(shapeSelect, BorderLayout.CENTER);
@@ -51,8 +63,8 @@ public class AddComponentFrame extends JDialog implements WindowListener, Action
         add(addComponent, BorderLayout.PAGE_END);
     }
 
-    public Order getOrder(){
-        return order;
+    public OrderWithQuantity getOrder(){
+        return orderWithQuantity;
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -64,7 +76,7 @@ public class AddComponentFrame extends JDialog implements WindowListener, Action
                     shapeCard = (JPanel) comp;
                 }
             }
-            order = new Order();
+             Order order = new Order();
 
             String shape = shapeCard.toString();
             String[] data = shape.split("[,]");
@@ -120,7 +132,18 @@ public class AddComponentFrame extends JDialog implements WindowListener, Action
 
             data = dimension.split("[x]");
             order.setDimensions(new Dimensions(Double.parseDouble(data[0]),Double.parseDouble(data[1])));
+            orderWithQuantity = new OrderWithQuantity();
+            orderWithQuantity.setOrder(order);
+            String quant = quantity.getValue().toString();
+            orderWithQuantity.setQuantity(Integer.valueOf(quant));
             setVisible(false);
+
+        }
+    }
+
+    private void getQuantityNumber(String[] q) {
+        for (Integer i =1; i<100; i++){
+            q[i-1] = new String(i.toString());
         }
     }
 
