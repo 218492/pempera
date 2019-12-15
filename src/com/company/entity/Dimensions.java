@@ -17,4 +17,8 @@ public class Dimensions {
         this.dimension_X = x;
         this.dimension_Y = y;
     }
+
+    public Dimensions(Dimensions dimensions){
+        this(dimensions.getDimension_X(), dimensions.getDimension_Y());
+    }
 }
