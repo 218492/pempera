@@ -15,10 +15,16 @@ public class PlateCard extends JPanel {
         repaint();
     }
 
-    public void paint(Graphics g){
+    public void paintComponent(Graphics g){
+        g.setColor(Color.WHITE);
+        g.fillRect(0,0,4000/3,2000/3);
         g.setColor(Color.BLACK);
+        g.drawRect(0,0,4000/3,2000/3);
         for (ElementOnPlate e : plate.elements){
-            g.drawRect(e.getPos_x().intValue(),e.getPos_y().intValue(), e.getElement().getDimensions().getDimension_X().intValue(), e.getElement().getDimensions().getDimension_Y().intValue());
+            g.drawRect(e.getPos_y().intValue()/3,e.getPos_x().intValue()/3,
+                    e.getElement().getDimensions().getDimension_Y().intValue()/3,
+                    e.getElement().getDimensions().getDimension_X().intValue()/3);
         }
+
     }
 }

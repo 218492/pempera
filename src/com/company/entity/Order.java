@@ -20,10 +20,10 @@ public class Order {
 
     public Order(PlateShape plateShape, PlateMaterialType plateMaterialType,
                  PlateThickness plateThickness, Dimensions dimensions){
-        setPlateShape(plateShape);
-        setPlateMaterialType(plateMaterialType);
-        setPlateThickness(plateThickness);
-        setDimensions(dimensions);
+        this.plateShape = plateShape;
+        this.plateMaterialType=plateMaterialType;
+        this.plateThickness=plateThickness;
+        this.dimensions=new Dimensions (dimensions);
     }
 
     public Order(Order order){
