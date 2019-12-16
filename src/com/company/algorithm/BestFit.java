@@ -127,7 +127,7 @@ public class BestFit {
                         (rotatedObj == null || normalObj.getOrder().getDimensions().getDimension_X()
                         >= rotatedObj.getOrder().getDimensions().getDimension_Y())) {
                     ElementOnPlate element = new ElementOnPlate();
-                    element.setElement(normalObj.getOrder());
+                    element.setElement(new Order(normalObj.getOrder()));
                     element.setPos_x(Double.valueOf(firstIndex));
                     element.setPos_y(Double.valueOf(minVal));
                     double maxIndexPadding = firstIndex+normalObj.getOrder().getDimensions().getDimension_X()+padding > 1999 ? 1999 : firstIndex+normalObj.getOrder().getDimensions().getDimension_X()+padding;
@@ -149,7 +149,10 @@ public class BestFit {
                             (normalObj == null || normalObj.getOrder().getDimensions().getDimension_X()
                                     < rotatedObj.getOrder().getDimensions().getDimension_Y())) {
                         ElementOnPlate element = new ElementOnPlate();
-                        element.setElement(rotatedObj.getOrder());
+                        element.setElement(new Order(rotatedObj.getOrder()));
+                        double setX = element.getElement().getDimensions().getDimension_Y();
+                        element.getElement().getDimensions().setDimension_Y(element.getElement().getDimensions().getDimension_X());
+                        element.getElement().getDimensions().setDimension_X(setX);
                         element.setPos_x(Double.valueOf(firstIndex));
                         element.setPos_y(Double.valueOf(minVal));
                         double maxIndexPadding = firstIndex+rotatedObj.getOrder().getDimensions().getDimension_Y()+padding > 1999 ? 1999 : firstIndex+rotatedObj.getOrder().getDimensions().getDimension_Y()+padding;
