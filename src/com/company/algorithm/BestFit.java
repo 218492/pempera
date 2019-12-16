@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class BestFit {
     List<Plate> plates = new Vector<>();
-    List<OrderWithQuantity> galvElem, stainlessElem, aluElem;
+    List<OrderWithQuantity> galvElem;
     Integer[] drawLine = new Integer[2000]; //4000 x 2000
     Integer maxLine = 4000;
     Integer padding = 5;
@@ -46,10 +46,35 @@ public class BestFit {
     }
 
     public BestFit(List<OrderWithQuantity> inputList){
-        galvElem = inputList.stream().filter(p -> p.getOrder().getPlateMaterialType() == PlateMaterialType.GALVANISED).collect(Collectors.toList());
+        galvElem = inputList.stream().filter(p -> p.getOrder().getPlateMaterialType() == PlateMaterialType.GALVANISED && p.getOrder().getPlateThickness() == PlateThickness.THICK).collect(Collectors.toList());
+        if (!galvElem.isEmpty())
+            placeElementsOnPlates( PlateMaterialType.GALVANISED, PlateThickness.THICK);
+
+        galvElem = inputList.stream().filter(p -> p.getOrder().getPlateMaterialType() == PlateMaterialType.GALVANISED && p.getOrder().getPlateThickness() == PlateThickness.THIN).collect(Collectors.toList());
+        if (!galvElem.isEmpty())
+            placeElementsOnPlates(PlateMaterialType.GALVANISED, PlateThickness.THIN);
+
+        galvElem = inputList.stream().filter(p -> p.getOrder().getPlateMaterialType() == PlateMaterialType.STAINLESS_STEEL && p.getOrder().getPlateThickness() == PlateThickness.THIN).collect(Collectors.toList());
+        if (!galvElem.isEmpty())
+            placeElementsOnPlates(PlateMaterialType.STAINLESS_STEEL, PlateThickness.THIN);
+
+        galvElem = inputList.stream().filter(p -> p.getOrder().getPlateMaterialType() == PlateMaterialType.STAINLESS_STEEL && p.getOrder().getPlateThickness() == PlateThickness.THICK).collect(Collectors.toList());
+        if (!galvElem.isEmpty())
+            placeElementsOnPlates( PlateMaterialType.STAINLESS_STEEL, PlateThickness.THICK);
+
+        galvElem = inputList.stream().filter(p -> p.getOrder().getPlateMaterialType() == PlateMaterialType.ALUMINIUM && p.getOrder().getPlateThickness() == PlateThickness.THIN).collect(Collectors.toList());
+        if (!galvElem.isEmpty())
+            placeElementsOnPlates(PlateMaterialType.ALUMINIUM, PlateThickness.THIN);
+
+        galvElem = inputList.stream().filter(p -> p.getOrder().getPlateMaterialType() == PlateMaterialType.ALUMINIUM && p.getOrder().getPlateThickness() == PlateThickness.THICK).collect(Collectors.toList());
+        if (!galvElem.isEmpty())
+            placeElementsOnPlates(PlateMaterialType.ALUMINIUM, PlateThickness.THICK);
+    }
+
+    private void placeElementsOnPlates(PlateMaterialType materialType, PlateThickness thickness) {
         Plate galvPlateThick = new Plate();
-        galvPlateThick.setMaterial(PlateMaterialType.GALVANISED);
-        galvPlateThick.setThickness(PlateThickness.THICK);
+        galvPlateThick.setMaterial(materialType);
+        galvPlateThick.setThickness(thickness);
         for (Integer j = 0 ; j < drawLine.length; j++){
             drawLine[j]=0;
         }
@@ -59,7 +84,7 @@ public class BestFit {
             Integer lastIndex = getMaxWidth(firstIndex, drawLine);
             Integer xMaxDim = lastIndex-firstIndex;
             Integer yMaxDim = maxLine - minVal;
-            List <OrderWithQuantity> norm = galvElem.stream().collect(Collectors.toList());
+            List<OrderWithQuantity> norm = galvElem.stream().collect(Collectors.toList());
             norm.sort(OrderWithQuantity.SORT_BY_X);
             List <OrderWithQuantity> rot = galvElem.stream().collect(Collectors.toList());
             rot.sort(OrderWithQuantity.SORT_BY_Y);
@@ -80,8 +105,8 @@ public class BestFit {
                 if ( leftMax == rightMax && leftMax == 0) {
                     plates.add(galvPlateThick);
                     galvPlateThick = new Plate();
-                    galvPlateThick.setMaterial(PlateMaterialType.GALVANISED);
-                    galvPlateThick.setThickness(PlateThickness.THICK);
+                    galvPlateThick.setMaterial(materialType);
+                    galvPlateThick.setThickness(thickness);
                     for (Integer j = 0 ; j < drawLine.length; j++){
                         drawLine[j]=0;
                     }
