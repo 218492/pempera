@@ -19,8 +19,9 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
     JButton addComponentButton, deleteComponentButton, saveOrder, makeOrder, cancelOrder;
     JTextField orderName;
     JList componentsList;
-    JLayeredPane topPane, centralPane, leftPane;
+    JLayeredPane topPane, centralList ,centralPane, leftPane;
     JLabel orderNameLabel, componentsListLabel;
+    JScrollPane scrollList;
     AddComponentFrame newComponentWindow;
     java.util.List<OrderWithQuantity> elementsList = new Vector<>();
 
@@ -65,10 +66,14 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
         listModel = new DefaultListModel<String>();
         componentsList = new JList(listModel);
         centralPane = new JLayeredPane();
-        centralPane.setLayout(new BoxLayout(centralPane,BoxLayout.PAGE_AXIS));
+        centralPane.setLayout(new BoxLayout(centralPane, BoxLayout.PAGE_AXIS));
+        centralList = new JLayeredPane();
+        centralList.setLayout(new FlowLayout(FlowLayout.LEFT));
+        //centralPane.add(componentsListLabel);
+        centralList.add(componentsList);
+        scrollList = new JScrollPane(centralList);
         centralPane.add(componentsListLabel);
-        centralPane.add(componentsList);
-
+        centralPane.add(scrollList);
         add(centralPane, BorderLayout.CENTER);
 
         leftPane = new JLayeredPane();
