@@ -1,5 +1,6 @@
 package com.company.gui;
 
+import com.company.algorithm.BestFit;
 import com.company.entity.OrderWithQuantity;
 
 import javax.swing.*;
@@ -10,18 +11,18 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Vector;
 
 public class MakeOrderFrame extends Frame implements WindowListener, ActionListener {
 
-
     DefaultListModel listModel;
-    JButton addComponentButton, deleteComponentButton, saveOrder, cancelOrder;
+    JButton addComponentButton, deleteComponentButton, saveOrder, makeOrder, cancelOrder;
     JTextField orderName;
     JList componentsList;
     JLayeredPane topPane, centralPane, leftPane;
     JLabel orderNameLabel, componentsListLabel;
     AddComponentFrame newComponentWindow;
-
+    java.util.List<OrderWithQuantity> elementsList = new Vector<>();
 
     public static void main(String[] args){
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -42,6 +43,7 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
         String thickness = o.getOrder().getPlateThickness().toString();
         String dimension = o.getOrder().getDimensions().getDimension_X().toString() +"x" +o.getOrder().getDimensions().getDimension_Y().toString();
         String elementName = quantity + ", " + shape + ", " + material + ", " + thickness + ", " + dimension;
+        elementsList.add(o);
         listModel.addElement(elementName);
     }
 
@@ -69,13 +71,12 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
 
         add(centralPane, BorderLayout.CENTER);
 
-        addComponentButton = new JButton("Add element");
-        deleteComponentButton = new JButton("Delete element");
-        saveOrder = new JButton("Save order");
-        cancelOrder = new JButton("Cancel order");
         leftPane = new JLayeredPane();
-        leftPane.setLayout(new BoxLayout(leftPane, BoxLayout.PAGE_AXIS));
+        //leftPane.setLayout(new BoxLayout(leftPane, BoxLayout.PAGE_AXIS));
 
+
+        //leftPane.add(setButtonLocation());
+        add(setButtonLocation(), BorderLayout.LINE_START);
         addComponentButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -87,6 +88,12 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
             @Override
             public void actionPerformed(ActionEvent e) {
                 deleteOrder();
+            }
+        });
+        makeOrder.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                bestFitAndDraw();
             }
         });
         saveOrder.addActionListener(new ActionListener() {
@@ -101,11 +108,7 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
                 dispose();
             }
         });
-        leftPane.add(addComponentButton);
-        leftPane.add(deleteComponentButton);
-        leftPane.add(saveOrder);
-        leftPane.add(cancelOrder);
-        add(leftPane, BorderLayout.LINE_START);
+
     }
 
     private void saveToFile() {
@@ -128,12 +131,26 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
         int selectedIndex = componentsList.getSelectedIndex();
         if (selectedIndex != -1) {
             listModel.remove(selectedIndex);
+            elementsList.remove(selectedIndex);
         }
     }
 
 
     private void addButtonAction() {
         newAddWindow();
+    }
+
+    private void bestFitAndDraw(){
+        java.util.List<OrderWithQuantity> temp = new Vector<>();
+        for (OrderWithQuantity o : elementsList){
+            temp.add(new OrderWithQuantity(o));
+        }
+        BestFit nowy = new BestFit(temp);
+
+        OutputPlatesDrawing drawings = new OutputPlatesDrawing(nowy.getPlates());
+        drawings.setSize(1355,745);
+        drawings.setLocation(0,0);
+        drawings.setVisible(true);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -158,4 +175,36 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
     public void windowDeiconified(WindowEvent e) {}
     public void windowDeactivated(WindowEvent e) {}
     public void windowClosed(WindowEvent e) {}
+
+    public JPanel setButtonLocation(){
+        addComponentButton = new JButton("Add element");
+        deleteComponentButton = new JButton("Delete element");
+        makeOrder = new JButton("Proccess order");
+        saveOrder = new JButton("Save order");
+        cancelOrder = new JButton("Cancel order");
+        GridBagConstraints c = new GridBagConstraints();
+        JPanel panel = new JPanel(new GridBagLayout());
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 1;
+        c.gridx = 0;
+        c.gridy = 0;
+        panel.add(addComponentButton,c);
+        c.gridx = 0;
+        c.gridy = 1;
+        panel.add(deleteComponentButton, c);
+
+        c.weightx = 1;
+        c.gridx = 0;
+        c.gridy = 2;
+        panel.add(makeOrder, c);
+
+        c.gridx = 0;
+        c.gridy = 3;
+        panel.add(saveOrder, c);
+
+        c.gridx = 0;
+        c.gridy = 4;
+        panel.add(cancelOrder, c);
+        return panel;
+    }
 }

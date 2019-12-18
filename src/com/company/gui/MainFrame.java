@@ -24,7 +24,7 @@ public class MainFrame extends Frame implements WindowListener, ActionListener {
         setLayout(new FlowLayout());
         addWindowListener(this);
         makeOrderButton = new JButton("Make order");
-        loadOrderButton = new JButton("Load order from file");
+        loadOrderButton = new JButton("Load order from database");
         exitButton = new JButton("Exit");
         add(makeOrderButton);
         add(loadOrderButton);
@@ -37,12 +37,12 @@ public class MainFrame extends Frame implements WindowListener, ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         switch (command) {
-            case "Load order from file":
+            case "Load order from database":
                 //load
                 break;
             case "Make order":
                 orderWindow = new MakeOrderFrame();
-                orderWindow.setSize(440,175);
+                orderWindow.setSize(540,200);
                 orderWindow.setLocation(400,450);
                 orderWindow.setVisible(true);
                 break;

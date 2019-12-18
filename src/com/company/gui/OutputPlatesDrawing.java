@@ -42,7 +42,7 @@ public class OutputPlatesDrawing extends Frame implements WindowListener, Action
         smallRects2.setQuantity(45);
         input.add(smallRects2);
         Order smallRect3 = new Order();
-        smallRect3.setDimensions(new Dimensions(350.0, 400.0));
+        smallRect3.setDimensions(new Dimensions(150.0, 100.0));
         smallRect3.setPlateThickness(PlateThickness.THICK);
         smallRect3.setPlateMaterialType(PlateMaterialType.GALVANISED);
         smallRect3.setPlateShape(PlateShape.RECTANGLE);
@@ -100,7 +100,6 @@ public class OutputPlatesDrawing extends Frame implements WindowListener, Action
     }
     public void windowClosing(WindowEvent e) {
         dispose();
-        System.exit(0);
     }
     public void windowClosed(WindowEvent e) {
 

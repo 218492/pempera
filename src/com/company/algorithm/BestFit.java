@@ -148,7 +148,7 @@ public class BestFit {
                     if (rotatedObj != null &&
                             (normalObj == null || normalObj.getOrder().getDimensions().getDimension_X()
                                     < rotatedObj.getOrder().getDimensions().getDimension_Y())) {
-                        ElementOnPlate element = new ElementOnPlate();
+                            ElementOnPlate element = new ElementOnPlate();
                         element.setElement(new Order(rotatedObj.getOrder()));
                         double setX = element.getElement().getDimensions().getDimension_Y();
                         element.getElement().getDimensions().setDimension_Y(element.getElement().getDimensions().getDimension_X());
