@@ -42,7 +42,7 @@ public class MainFrame extends Frame implements WindowListener, ActionListener {
                 break;
             case "Make order":
                 orderWindow = new MakeOrderFrame();
-                orderWindow.setSize(540,200);
+                orderWindow.setSize(480,200);
                 orderWindow.setLocation(400,450);
                 orderWindow.setVisible(true);
                 break;
