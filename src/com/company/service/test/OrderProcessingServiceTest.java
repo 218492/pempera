@@ -3,11 +3,9 @@ package com.company.service.test;
 import com.company.entity.Order;
 import com.company.exception.DataManipulationException;
 import com.company.exception.WrongDataException;
-import com.company.service.OrderProcessingService;
-import com.company.service.impl.OrderProcessingServiceImpl;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.company.service.impl.OrderProcessingService;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,45 +13,42 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import static junit.framework.TestCase.assertTrue;
+
 public class OrderProcessingServiceTest {
 
-    private OrderProcessingService orderProcessingService = new OrderProcessingServiceImpl();
     private File tempFile;
 
-    @BeforeEach
+    @Before
     public void setup() throws IOException {
         tempFile = File.createTempFile("orderProcessingServiceTest", "txt");
     }
 
     @Test
     public void shouldReturnEmptyListWhenFileEmpty() throws IOException, DataManipulationException {
-        List<Order> orders = orderProcessingService.loadOrdersFromFile(tempFile.getPath());
+        List<Order> orders = OrderProcessingService.loadOrdersFromFile(tempFile.getPath());
 
-        Assertions.assertTrue(orders.isEmpty());
+        assertTrue(orders.isEmpty());
     }
 
-    @Test
+    @Test(expected= WrongDataException.class)
     public void shouldThrowAnExceptionWhenWrongData() throws IOException, DataManipulationException {
-        writeLinesToFIle("1321ewsad");
+        writeLinesToFile("1321ewsad");
 
-        Assertions.assertThrows(WrongDataException.class, () ->
-                orderProcessingService.loadOrdersFromFile(tempFile.getPath()));
+        OrderProcessingService.loadOrdersFromFile(tempFile.getPath());
     }
 
-    @Test
-    public void shouldThrowCorrectLineExceptionWhenWrongData() throws IOException, DataManipulationException {
+    @Test(expected = WrongDataException.class)
+    public void shouldThrowAnExceptionWhenWrongLineNumber() throws IOException, DataManipulationException {
         String wrongLineNumber = "2";
-        writeLinesToFIle(
+        writeLinesToFile(
                 "2.00,1.00,RECTANGLE,THICK,ALUMINIUM",
                 "dasdasda,da,dasd,asd,ada,da,ddsad"
                 );
-
-        Exception thrown = Assertions.assertThrows(WrongDataException.class, () ->
-                orderProcessingService.loadOrdersFromFile(tempFile.getPath()));
-        Assertions.assertTrue(thrown.getMessage().contains(wrongLineNumber));
+        OrderProcessingService.loadOrdersFromFile(tempFile.getPath());
     }
 
-    private void writeLinesToFIle(String... lines) throws IOException {
+    private void writeLinesToFile(String... lines) throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile));
         for(int i=0; i<lines.length; i++){
             bw.write(lines[i]);

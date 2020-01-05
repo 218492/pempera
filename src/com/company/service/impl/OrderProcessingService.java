@@ -4,18 +4,16 @@ import com.company.common.OrderAssembler;
 import com.company.entity.Order;
 import com.company.exception.DataManipulationException;
 import com.company.exception.WrongDataException;
-import com.company.service.OrderProcessingService;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderProcessingServiceImpl implements OrderProcessingService {
+public class OrderProcessingService {
     private static final String DELIMITER = ",";
-    private DataInputStream inputStream = null;
+    private static DataInputStream inputStream = null;
 
-    @Override
-    public List<Order> loadOrdersFromFile(String filePath) throws IOException, DataManipulationException {
+    public static List<Order> loadOrdersFromFile(String filePath) throws IOException, DataManipulationException {
         List<Order> orders = new ArrayList<>();
 
         try {
@@ -41,8 +39,7 @@ public class OrderProcessingServiceImpl implements OrderProcessingService {
         return orders;
     }
 
-    @Override
-    public void saveOrdersToFile(List<Order> orders, String filePath) {
+    public static void saveOrdersToFile(List<Order> orders, String filePath) {
         //orders.stream().forEach();
     }
 }
