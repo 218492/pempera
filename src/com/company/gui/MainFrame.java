@@ -10,7 +10,7 @@ import java.awt.event.WindowListener;
 
 public class MainFrame extends Frame implements WindowListener, ActionListener {
     private JButton makeOrderButton, loadOrderButton, exitButton;
-    MakeOrderFrame orderWindow;
+    private MakeOrderFrame orderWindow;
 
     public static void main(String[] args){
         MainFrame mainWindow = new MainFrame();

@@ -16,11 +16,11 @@ import java.awt.event.*;
 
 public class AddComponentFrame extends JDialog implements WindowListener, ActionListener, ItemListener{
 
-    JPanel shapeSelect;
-    JButton addComponent;
-    OrderWithQuantity orderWithQuantity;
-    SpinnerListModel quantitySpinnerModel;
-    JSpinner quantity;
+    private JPanel shapeSelect;
+    private JButton addComponent;
+    private OrderWithQuantity orderWithQuantity;
+    private SpinnerListModel quantitySpinnerModel;
+    private JSpinner quantity;
 
     public static void main(String[] args){
         AddComponentFrame orderWindow = new AddComponentFrame();

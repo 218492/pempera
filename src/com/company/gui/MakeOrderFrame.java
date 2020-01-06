@@ -15,15 +15,15 @@ import java.util.Vector;
 
 public class MakeOrderFrame extends Frame implements WindowListener, ActionListener {
 
-    DefaultListModel listModel;
-    JButton addComponentButton, deleteComponentButton, saveOrder, makeOrder, cancelOrder;
-    JTextField orderName;
-    JList componentsList;
-    JLayeredPane topPane, centralList ,centralPane, leftPane;
-    JLabel orderNameLabel, componentsListLabel;
-    JScrollPane scrollList;
-    AddComponentFrame newComponentWindow;
-    java.util.List<OrderWithQuantity> elementsList = new Vector<>();
+    private DefaultListModel listModel;
+    private JButton addComponentButton, deleteComponentButton, saveOrder, makeOrder, cancelOrder;
+    private JTextField orderName;
+    private JList componentsList;
+    private JLayeredPane topPane, centralList ,centralPane, leftPane;
+    private JLabel orderNameLabel, componentsListLabel;
+    private JScrollPane scrollList;
+    private AddComponentFrame newComponentWindow;
+    private java.util.List<OrderWithQuantity> elementsList = new Vector<>();
 
     public static void main(String[] args){
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -37,7 +37,7 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
 
     }
 
-    public void addNewOrder(OrderWithQuantity o){
+    private void addNewOrder(OrderWithQuantity o){
         String quantity = o.getQuantity().toString();
         String shape = o.getOrder().getPlateShape().toString();
         String material = o.getOrder().getPlateMaterialType().toString();
@@ -48,7 +48,7 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
         listModel.addElement(elementName);
     }
 
-    public MakeOrderFrame(){
+    MakeOrderFrame(){
         super("Order Edition");
         setLayout(new BorderLayout());
         addWindowListener(this);
@@ -82,37 +82,14 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
 
         //leftPane.add(setButtonLocation());
         add(setButtonLocation(), BorderLayout.LINE_START);
-        addComponentButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addButtonAction();
-                addNewOrder(newComponentWindow.getOrder());
-            }
+        addComponentButton.addActionListener(e -> {
+            addButtonAction();
+            addNewOrder(newComponentWindow.getOrder());
         });
-        deleteComponentButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteOrder();
-            }
-        });
-        makeOrder.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                bestFitAndDraw();
-            }
-        });
-        saveOrder.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                saveToFile();
-            }
-        });
-        cancelOrder.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
+        deleteComponentButton.addActionListener(e -> deleteOrder());
+        makeOrder.addActionListener(e -> bestFitAndDraw());
+        saveOrder.addActionListener(e -> saveToFile());
+        cancelOrder.addActionListener(e -> dispose());
 
     }
 
@@ -181,7 +158,7 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
     public void windowDeactivated(WindowEvent e) {}
     public void windowClosed(WindowEvent e) {}
 
-    public JPanel setButtonLocation(){
+    private JPanel setButtonLocation(){
         addComponentButton = new JButton("Add element");
         deleteComponentButton = new JButton("Delete element");
         makeOrder = new JButton("Proccess order");
