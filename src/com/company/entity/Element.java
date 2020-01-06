@@ -8,26 +8,26 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Order {
+public class Element {
     PlateShape plateShape;
     PlateMaterialType plateMaterialType;
     PlateThickness plateThickness;
     Dimensions dimensions;
 
-    public Order(){
+    public Element(){
 
     }
 
-    public Order(PlateShape plateShape, PlateMaterialType plateMaterialType,
-                 PlateThickness plateThickness, Dimensions dimensions){
+    public Element(PlateShape plateShape, PlateMaterialType plateMaterialType,
+                   PlateThickness plateThickness, Dimensions dimensions){
         this.plateShape = plateShape;
         this.plateMaterialType=plateMaterialType;
         this.plateThickness=plateThickness;
         this.dimensions=new Dimensions (dimensions);
     }
 
-    public Order(Order order){
-        this(order.getPlateShape(), order.getPlateMaterialType(),
-                order.getPlateThickness(), order.getDimensions());
+    public Element(Element element){
+        this(element.getPlateShape(), element.getPlateMaterialType(),
+                element.getPlateThickness(), element.getDimensions());
     }
 }

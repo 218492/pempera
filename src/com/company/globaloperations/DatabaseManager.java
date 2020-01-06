@@ -1,6 +1,6 @@
-package com.company.orderoperations;
+package com.company.globaloperations;
 
-import com.company.entity.Order;
+import com.company.entity.Element;
 import com.company.exception.DataManipulationException;
 import com.company.exception.WrongDataException;
 
@@ -9,18 +9,18 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderDatabaseManager {
+public class DatabaseManager {
     private static String fullFilePath;
 
     private static final String DELIMITER = ",";
     private static DataInputStream inputStream = null;
 
     public static void setDatabaseLocation(String fullFilePath){
-        OrderDatabaseManager.fullFilePath = fullFilePath;
+        DatabaseManager.fullFilePath = fullFilePath;
     }
 
-    public static List<Order> loadOrdersFromFile(String filePath) throws IOException, DataManipulationException {
-        List<Order> orders = new ArrayList<>();
+    public static List<Element> loadOrdersFromFile(String filePath) throws IOException, DataManipulationException {
+        List<Element> elements = new ArrayList<>();
 
         try {
             inputStream = new DataInputStream(new FileInputStream(filePath));
@@ -29,20 +29,20 @@ public class OrderDatabaseManager {
             String line = reader.readLine();
             while (line != null) {
                 String[] dataSet = line.split(DELIMITER);
-                Order order = OrderAssembler.assembleOrder(dataSet);
-                orders.add(order);
+                Element element = ElementAssembler.assembleOrder(dataSet);
+                elements.add(element);
                 line = reader.readLine();
             }
 
         } catch (WrongDataException e) {
-            Integer currentLineNumber = orders.size() + 1;
+            Integer currentLineNumber = elements.size() + 1;
             throw new WrongDataException(currentLineNumber);
         } finally {
             if (inputStream != null) {
                 inputStream.close();
             }
         }
-        return orders;
+        return elements;
     }
 
     public static Connection connect() {
@@ -65,7 +65,7 @@ public class OrderDatabaseManager {
         String sql = "INSERT INTO ORDERS(quantity, shape, material, thickness, x_dimension, y_dimension) VALUES(?,?,?,?,?,?);";
 
         try{
-            Connection conn = OrderDatabaseManager.connect();
+            Connection conn = DatabaseManager.connect();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, 1);
             pstmt.setString(2, "RECTANGLE");
@@ -99,7 +99,7 @@ public class OrderDatabaseManager {
     }
 
 
-    public static void saveOrdersToFile(List<Order> orders, String filePath) {
+    public static void saveOrdersToFile(List<Element> elements, String filePath) {
         //orders.stream().forEach();
     }
 }

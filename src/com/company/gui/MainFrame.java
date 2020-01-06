@@ -44,7 +44,7 @@ public class MainFrame extends Frame implements WindowListener, ActionListener {
                 orderWindow.setLocation(400,450);
                 orderWindow.setVisible(true);
                 orderWindow.addWindowListener(new WindowAdapter() {
-                    public void windowClosing(WindowEvent e) {
+                    public void windowClosed(WindowEvent e) {
                         MainFrame.this.setEnabled(true);
                         MainFrame.this.toFront();
                     }});

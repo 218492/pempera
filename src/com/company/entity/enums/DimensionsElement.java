@@ -1,6 +1,6 @@
 package com.company.entity.enums;
 
-public enum DimensionsOrder {
+public enum DimensionsElement {
     BY_X,
     BY_Y
 }

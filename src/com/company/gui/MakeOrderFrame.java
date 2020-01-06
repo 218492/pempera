@@ -1,7 +1,7 @@
 package com.company.gui;
 
 import com.company.algorithm.BestFit;
-import com.company.entity.OrderWithQuantity;
+import com.company.entity.ElementWithQuantity;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,41 +19,43 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
     private JButton addComponentButton, deleteComponentButton, saveOrder, makeOrder, cancelOrder;
     private JTextField orderName;
     private JList componentsList;
-    private JLayeredPane topPane, centralList ,centralPane, leftPane;
+    private JLayeredPane topPane, centralList, centralPane, leftPane;
     private JLabel orderNameLabel, componentsListLabel;
     private JScrollPane scrollList;
     private AddComponentFrame newComponentWindow;
-    private java.util.List<OrderWithQuantity> elementsList = new Vector<>();
+    private java.util.List<ElementWithQuantity> elementsList = new Vector<>();
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 MakeOrderFrame orderWindow = new MakeOrderFrame();
-                orderWindow.setSize(480,175);
-                orderWindow.setLocation(400,450);
+                orderWindow.setSize(480, 175);
+                orderWindow.setLocation(400, 450);
                 orderWindow.setVisible(true);
             }
         });
 
     }
 
-    private void addNewOrder(OrderWithQuantity o){
-        String quantity = o.getQuantity().toString();
-        String shape = o.getOrder().getPlateShape().toString();
-        String material = o.getOrder().getPlateMaterialType().toString();
-        String thickness = o.getOrder().getPlateThickness().toString();
-        String dimension = o.getOrder().getDimensions().getDimension_X().toString() +"x" +o.getOrder().getDimensions().getDimension_Y().toString();
-        String elementName = quantity + ", " + shape + ", " + material + ", " + thickness + ", " + dimension;
-        elementsList.add(o);
-        listModel.addElement(elementName);
+    private void addNewOrder(ElementWithQuantity o) {
+        if (o != null) {
+            String quantity = o.getQuantity().toString();
+            String shape = o.getElement().getPlateShape().toString();
+            String material = o.getElement().getPlateMaterialType().toString();
+            String thickness = o.getElement().getPlateThickness().toString();
+            String dimension = o.getElement().getDimensions().getDimension_X().toString() + "x" + o.getElement().getDimensions().getDimension_Y().toString();
+            String elementName = quantity + ", " + shape + ", " + material + ", " + thickness + ", " + dimension;
+            elementsList.add(o);
+            listModel.addElement(elementName);
+        }
     }
 
-    MakeOrderFrame(){
+    MakeOrderFrame() {
         super("Order Edition");
         setLayout(new BorderLayout());
         addWindowListener(this);
 
-        orderName = new JTextField("type filename",20);
+        orderName = new JTextField("type filename", 20);
         orderNameLabel = new JLabel("Order Name:");
         topPane = new JLayeredPane();
         topPane.setLayout(new FlowLayout());
@@ -95,12 +97,12 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
 
     private void saveToFile() {
         String text = new String();
-        for(int i = 0; i < listModel.size(); i++){
+        for (int i = 0; i < listModel.size(); i++) {
             text += listModel.elementAt(i).toString() + "\n";
         }
         PrintWriter out = null;
         try {
-            out = new PrintWriter("orders/" +orderName.getText() + ".txt");
+            out = new PrintWriter("orders/" + orderName.getText() + ".txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -122,16 +124,16 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
         newAddWindow();
     }
 
-    private void bestFitAndDraw(){
-        java.util.List<OrderWithQuantity> temp = new Vector<>();
-        for (OrderWithQuantity o : elementsList){
-            temp.add(new OrderWithQuantity(o));
+    private void bestFitAndDraw() {
+        java.util.List<ElementWithQuantity> temp = new Vector<>();
+        for (ElementWithQuantity o : elementsList) {
+            temp.add(new ElementWithQuantity(o));
         }
         BestFit nowy = new BestFit(temp);
 
         OutputPlatesDrawing drawings = new OutputPlatesDrawing(nowy.getPlates());
-        drawings.setSize(1355,745);
-        drawings.setLocation(0,0);
+        drawings.setSize(1355, 745);
+        drawings.setLocation(0, 0);
         drawings.setVisible(true);
     }
 
@@ -140,24 +142,37 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
 
     private void newAddWindow() {
         newComponentWindow = new AddComponentFrame();
-        newComponentWindow.setSize(440,175);
-        newComponentWindow.setLocation(400,450);
+        newComponentWindow.setSize(440, 175);
+        newComponentWindow.setLocation(400, 450);
         newComponentWindow.addWindowListener(this);
         newComponentWindow.setVisible(true);
     }
 
     public void windowClosing(WindowEvent e) {
-        dispose();
+        if(e.getSource() instanceof MakeOrderFrame){
+            dispose();
+        }
     }
 
-    public void windowOpened(WindowEvent e) {}
-    public void windowActivated(WindowEvent e) {}
-    public void windowIconified(WindowEvent e) {}
-    public void windowDeiconified(WindowEvent e) {}
-    public void windowDeactivated(WindowEvent e) {}
-    public void windowClosed(WindowEvent e) {}
+    public void windowOpened(WindowEvent e) {
+    }
 
-    private JPanel setButtonLocation(){
+    public void windowActivated(WindowEvent e) {
+    }
+
+    public void windowIconified(WindowEvent e) {
+    }
+
+    public void windowDeiconified(WindowEvent e) {
+    }
+
+    public void windowDeactivated(WindowEvent e) {
+    }
+
+    public void windowClosed(WindowEvent e) {
+    }
+
+    private JPanel setButtonLocation() {
         addComponentButton = new JButton("Add element");
         deleteComponentButton = new JButton("Delete element");
         makeOrder = new JButton("Proccess order");
@@ -169,7 +184,7 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
         c.weightx = 1;
         c.gridx = 0;
         c.gridy = 0;
-        panel.add(addComponentButton,c);
+        panel.add(addComponentButton, c);
         c.gridx = 0;
         c.gridy = 1;
         panel.add(deleteComponentButton, c);

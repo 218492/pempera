@@ -2,8 +2,8 @@ package com.company.gui;
 
 import com.company.algorithm.BestFit;
 import com.company.entity.Dimensions;
-import com.company.entity.Order;
-import com.company.entity.OrderWithQuantity;
+import com.company.entity.Element;
+import com.company.entity.ElementWithQuantity;
 import com.company.entity.Plate;
 import com.company.entity.enums.PlateMaterialType;
 import com.company.entity.enums.PlateShape;
@@ -22,32 +22,32 @@ public class OutputPlatesDrawing extends Frame implements WindowListener, Action
     List<JPanel> plateCards = new Vector<>();
 
     public static void main(String[] args){
-        List<OrderWithQuantity> input = new Vector<>();
-        Order smallRect = new Order();
+        List<ElementWithQuantity> input = new Vector<>();
+        Element smallRect = new Element();
         smallRect.setDimensions(new Dimensions(400.0, 150.0));
         smallRect.setPlateThickness(PlateThickness.THICK);
         smallRect.setPlateMaterialType(PlateMaterialType.GALVANISED);
         smallRect.setPlateShape(PlateShape.RECTANGLE);
-        OrderWithQuantity smallRects = new OrderWithQuantity();
-        smallRects.setOrder(smallRect);
+        ElementWithQuantity smallRects = new ElementWithQuantity();
+        smallRects.setElement(smallRect);
         smallRects.setQuantity(45);
         input.add(smallRects);
-        Order smallRect2 = new Order();
+        Element smallRect2 = new Element();
         smallRect2.setDimensions(new Dimensions(300.0, 600.0));
         smallRect2.setPlateThickness(PlateThickness.THICK);
         smallRect2.setPlateMaterialType(PlateMaterialType.GALVANISED);
         smallRect2.setPlateShape(PlateShape.RECTANGLE);
-        OrderWithQuantity smallRects2 = new OrderWithQuantity();
-        smallRects2.setOrder(smallRect2);
+        ElementWithQuantity smallRects2 = new ElementWithQuantity();
+        smallRects2.setElement(smallRect2);
         smallRects2.setQuantity(45);
         input.add(smallRects2);
-        Order smallRect3 = new Order();
+        Element smallRect3 = new Element();
         smallRect3.setDimensions(new Dimensions(150.0, 100.0));
         smallRect3.setPlateThickness(PlateThickness.THICK);
         smallRect3.setPlateMaterialType(PlateMaterialType.GALVANISED);
         smallRect3.setPlateShape(PlateShape.RECTANGLE);
-        OrderWithQuantity smallRects3 = new OrderWithQuantity();
-        smallRects3.setOrder(smallRect3);
+        ElementWithQuantity smallRects3 = new ElementWithQuantity();
+        smallRects3.setElement(smallRect3);
         smallRects3.setQuantity(45);
         input.add(smallRects3);
 

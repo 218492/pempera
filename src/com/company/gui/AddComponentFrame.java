@@ -1,8 +1,8 @@
 package com.company.gui;
 
 import com.company.entity.Dimensions;
-import com.company.entity.OrderWithQuantity;
-import com.company.entity.Order;
+import com.company.entity.ElementWithQuantity;
+import com.company.entity.Element;
 import com.company.entity.enums.PlateMaterialType;
 import com.company.entity.enums.PlateShape;
 import com.company.entity.enums.PlateThickness;
@@ -18,7 +18,7 @@ public class AddComponentFrame extends JDialog implements WindowListener, Action
 
     private JPanel shapeSelect;
     private JButton addComponent;
-    private OrderWithQuantity orderWithQuantity;
+    private ElementWithQuantity elementWithQuantity;
     private SpinnerListModel quantitySpinnerModel;
     private JSpinner quantity;
 
@@ -63,8 +63,8 @@ public class AddComponentFrame extends JDialog implements WindowListener, Action
         add(addComponent, BorderLayout.PAGE_END);
     }
 
-    public OrderWithQuantity getOrder(){
-        return orderWithQuantity;
+    public ElementWithQuantity getOrder(){
+        return elementWithQuantity;
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -76,7 +76,7 @@ public class AddComponentFrame extends JDialog implements WindowListener, Action
                     shapeCard = (JPanel) comp;
                 }
             }
-             Order order = new Order();
+             Element element = new Element();
 
             String shape = shapeCard.toString();
             String[] data = shape.split("[,]");
@@ -99,43 +99,43 @@ public class AddComponentFrame extends JDialog implements WindowListener, Action
 
             switch (shape){
                 case "RectanglePanel":
-                    order.setPlateShape(PlateShape.RECTANGLE);
+                    element.setPlateShape(PlateShape.RECTANGLE);
                     break;
                 case "TriangleEquiPanel":
-                    order.setPlateShape(PlateShape.TRIANGLE_EQUI);
+                    element.setPlateShape(PlateShape.TRIANGLE_EQUI);
                     break;
                 case "TriangleRectPanel":
-                    order.setPlateShape(PlateShape.TRIANGLE_RECT);
+                    element.setPlateShape(PlateShape.TRIANGLE_RECT);
                     break;
             }
 
             switch(material){
                 case "Stainless steel":
-                    order.setPlateMaterialType(PlateMaterialType.STAINLESS_STEEL);
+                    element.setPlateMaterialType(PlateMaterialType.STAINLESS_STEEL);
                     break;
                 case "Aluminium":
-                    order.setPlateMaterialType(PlateMaterialType.ALUMINIUM);
+                    element.setPlateMaterialType(PlateMaterialType.ALUMINIUM);
                     break;
                 case "Galvanised":
-                    order.setPlateMaterialType(PlateMaterialType.GALVANISED);
+                    element.setPlateMaterialType(PlateMaterialType.GALVANISED);
                     break;
             }
 
             switch (thickness){
                 case "Thick":
-                    order.setPlateThickness(PlateThickness.THICK);
+                    element.setPlateThickness(PlateThickness.THICK);
                     break;
                 case "Thin":
-                    order.setPlateThickness(PlateThickness.THIN);
+                    element.setPlateThickness(PlateThickness.THIN);
                     break;
             }
 
             data = dimension.split("[x]");
-            order.setDimensions(new Dimensions(Double.parseDouble(data[0]),Double.parseDouble(data[1])));
-            orderWithQuantity = new OrderWithQuantity();
-            orderWithQuantity.setOrder(order);
+            element.setDimensions(new Dimensions(Double.parseDouble(data[0]),Double.parseDouble(data[1])));
+            elementWithQuantity = new ElementWithQuantity();
+            elementWithQuantity.setElement(element);
             String quant = quantity.getValue().toString();
-            orderWithQuantity.setQuantity(Integer.valueOf(quant));
+            elementWithQuantity.setQuantity(Integer.valueOf(quant));
             setVisible(false);
 
         }
@@ -149,7 +149,6 @@ public class AddComponentFrame extends JDialog implements WindowListener, Action
 
     public void windowClosing(WindowEvent e) {
         dispose();
-        System.exit(0);
     }
 
     public void windowOpened(WindowEvent e) {}
