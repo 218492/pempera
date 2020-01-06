@@ -2,6 +2,7 @@ package com.company.gui;
 
 import com.company.algorithm.BestFit;
 import com.company.entity.ElementWithQuantity;
+import com.company.globaloperations.ElementAssembler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,16 +38,11 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
 
     }
 
-    private void addNewElement(ElementWithQuantity o) {
-        if (o != null) {
-            String quantity = o.getQuantity().toString();
-            String shape = o.getElement().getPlateShape().toString();
-            String material = o.getElement().getPlateMaterialType().toString();
-            String thickness = o.getElement().getPlateThickness().toString();
-            String dimension = o.getElement().getDimensions().getDimension_X().toString() + "x" + o.getElement().getDimensions().getDimension_Y().toString();
-            String elementName = quantity + ", " + shape + ", " + material + ", " + thickness + ", " + dimension;
-            elementsList.add(o);
-            listModel.addElement(elementName);
+    private void addNewElement(ElementWithQuantity elementWithQuantity) {
+        if (elementWithQuantity != null) {
+            String elementToDisplay = ElementAssembler.convertElementWithQuantityToString(elementWithQuantity);
+            elementsList.add(elementWithQuantity);
+            listModel.addElement(elementToDisplay);
         }
     }
 
