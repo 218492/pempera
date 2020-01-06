@@ -148,7 +148,6 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
 
     public void windowClosing(WindowEvent e) {
         dispose();
-        System.exit(0);
     }
 
     public void windowOpened(WindowEvent e) {}

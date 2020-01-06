@@ -2,10 +2,7 @@ package com.company.gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 
 
 public class MainFrame extends Frame implements WindowListener, ActionListener {
@@ -41,10 +38,16 @@ public class MainFrame extends Frame implements WindowListener, ActionListener {
                 //load
                 break;
             case "Make order":
+                this.setEnabled(false);
                 orderWindow = new MakeOrderFrame();
                 orderWindow.setSize(480,200);
                 orderWindow.setLocation(400,450);
                 orderWindow.setVisible(true);
+                orderWindow.addWindowListener(new WindowAdapter() {
+                    public void windowClosing(WindowEvent e) {
+                        MainFrame.this.setEnabled(true);
+                        MainFrame.this.toFront();
+                    }});
                 break;
             case "Exit":
                 dispose();
