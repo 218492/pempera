@@ -29,7 +29,7 @@ public class DatabaseManager {
             String line = reader.readLine();
             while (line != null) {
                 String[] dataSet = line.split(DELIMITER);
-                Element element = ElementAssembler.assembleOrder(dataSet);
+                Element element = ElementAssembler.assembleElement(dataSet);
                 elements.add(element);
                 line = reader.readLine();
             }
@@ -61,8 +61,8 @@ public class DatabaseManager {
         return conn;
     }
 
-    public static void insert() {
-        String sql = "INSERT INTO ORDERS(quantity, shape, material, thickness, x_dimension, y_dimension) VALUES(?,?,?,?,?,?);";
+    public static void insertElement() {
+        String sql = "INSERT INTO ELEMENTS(shape, material, thickness, x_dimension, y_dimension) VALUES(?,?,?,?,?);";
 
         try{
             Connection conn = DatabaseManager.connect();
@@ -79,7 +79,7 @@ public class DatabaseManager {
         }
     }
 
-    public static void selectAll() {
+    public static void selectAllOrders() {
         String sql = "SELECT * FROM ORDERS";
 
         try {

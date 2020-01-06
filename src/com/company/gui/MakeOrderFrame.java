@@ -37,7 +37,7 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
 
     }
 
-    private void addNewOrder(ElementWithQuantity o) {
+    private void addNewElement(ElementWithQuantity o) {
         if (o != null) {
             String quantity = o.getQuantity().toString();
             String shape = o.getElement().getPlateShape().toString();
@@ -86,7 +86,7 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
         add(setButtonLocation(), BorderLayout.LINE_START);
         addComponentButton.addActionListener(e -> {
             addButtonAction();
-            addNewOrder(newComponentWindow.getOrder());
+            addNewElement(newComponentWindow.getOrder());
         });
         deleteComponentButton.addActionListener(e -> deleteOrder());
         makeOrder.addActionListener(e -> bestFitAndDraw());
