@@ -2,16 +2,16 @@ package com.company.gui;
 
 import com.company.algorithm.BestFit;
 import com.company.entity.ElementWithQuantity;
+import com.company.globaloperations.DatabaseManager;
 import com.company.globaloperations.ElementAssembler;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public class MakeOrderFrame extends Frame implements WindowListener, ActionListener {
@@ -24,7 +24,9 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
     private JLabel orderNameLabel, componentsListLabel;
     private JScrollPane scrollList;
     private AddComponentFrame newComponentWindow;
-    private java.util.List<ElementWithQuantity> elementsList = new Vector<>();
+    private List<ElementWithQuantity> elementsList = new ArrayList<>();
+
+    private static final String TEMPLATE_ORDERNAME = "type filename";
 
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -51,7 +53,7 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
         setLayout(new BorderLayout());
         addWindowListener(this);
 
-        orderName = new JTextField("type filename", 20);
+        orderName = new JTextField(TEMPLATE_ORDERNAME, 20);
         orderNameLabel = new JLabel("Order Name:");
         topPane = new JLayeredPane();
         topPane.setLayout(new FlowLayout());
@@ -88,6 +90,19 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
         makeOrder.addActionListener(e -> bestFitAndDraw());
         saveOrder.addActionListener(e -> saveToFile());
         cancelOrder.addActionListener(e -> dispose());
+        orderName.addFocusListener(new FocusListener(){
+            @Override
+            public void focusGained(FocusEvent e) {
+                if(orderName.getText().equals(TEMPLATE_ORDERNAME)){
+                    orderName.setText("");
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+
+            }
+        });
 
     }
 
@@ -105,6 +120,12 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
         out.println(text);
         out.close();
         dispose();
+    }
+
+    private void saveToDatabase(){
+//        elementsList
+        String ordName = orderName.getText();
+        DatabaseManager.saveOrdersToDatabase(elementsList, ordName);
     }
 
     private void deleteOrder() {

@@ -1,11 +1,12 @@
 package com.company.globaloperations;
 
 import com.company.entity.Element;
+import com.company.entity.ElementWithQuantity;
 import com.company.exception.DataManipulationException;
 import com.company.exception.WrongDataException;
 
-import java.sql.*;
 import java.io.*;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +100,7 @@ public class DatabaseManager {
     }
 
 
-    public static void saveOrdersToFile(List<Element> elements, String filePath) {
+    public static void saveOrdersToDatabase(List<ElementWithQuantity> elements, String orderName) {
         //orders.stream().forEach();
     }
 }
