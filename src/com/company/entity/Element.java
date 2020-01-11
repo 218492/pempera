@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Element {
+    Integer id;
     PlateShape plateShape;
     PlateMaterialType plateMaterialType;
     PlateThickness plateThickness;

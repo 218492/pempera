@@ -125,7 +125,7 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
     private void saveToDatabase(){
 //        elementsList
         String ordName = orderName.getText();
-        DatabaseManager.saveOrdersToDatabase(elementsList, ordName);
+        DatabaseManager.saveOrderToDatabase(elementsList, ordName);
     }
 
     private void deleteOrder() {
