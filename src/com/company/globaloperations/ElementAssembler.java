@@ -27,8 +27,8 @@ public class ElementAssembler {
     public static String[] convertElementToStringArray(Element element) {
         String[] elementAsStringArray = new String[5];
 
-        elementAsStringArray[0] = element.getDimensions().getDimension_X().toString();
-        elementAsStringArray[1] = element.getDimensions().getDimension_Y().toString();
+        elementAsStringArray[0] = element.getDimensions().getX_dimension().toString();
+        elementAsStringArray[1] = element.getDimensions().getY_dimension().toString();
         elementAsStringArray[2] = element.getPlateShape().toString();
         elementAsStringArray[3] = element.getPlateMaterialType().toString();
         elementAsStringArray[4] = element.getPlateThickness().toString();
@@ -41,8 +41,8 @@ public class ElementAssembler {
         Element element = elementWithQuantity.getElement();
 
         elementAsStringArray[0] = elementWithQuantity.getQuantity().toString();
-        elementAsStringArray[1] = element.getDimensions().getDimension_X().toString();
-        elementAsStringArray[2] = element.getDimensions().getDimension_Y().toString();
+        elementAsStringArray[1] = element.getDimensions().getX_dimension().toString();
+        elementAsStringArray[2] = element.getDimensions().getY_dimension().toString();
         elementAsStringArray[3] = element.getPlateShape().toString();
         elementAsStringArray[4] = element.getPlateMaterialType().toString();
         elementAsStringArray[5] = element.getPlateThickness().toString();

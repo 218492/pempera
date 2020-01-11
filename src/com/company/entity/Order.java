@@ -1,6 +1,11 @@
 package com.company.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Order {
-    Integer id;
-    String name;
+    private Integer id;
+    private String name;
 }

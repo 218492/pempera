@@ -88,7 +88,7 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
         });
         deleteComponentButton.addActionListener(e -> deleteOrder());
         makeOrder.addActionListener(e -> bestFitAndDraw());
-        saveOrder.addActionListener(e -> saveToFile());
+        saveOrder.addActionListener(e -> saveToDatabase());
         cancelOrder.addActionListener(e -> dispose());
         orderName.addFocusListener(new FocusListener(){
             @Override
@@ -123,9 +123,9 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
     }
 
     private void saveToDatabase(){
-//        elementsList
         String ordName = orderName.getText();
-        DatabaseManager.saveOrderToDatabase(elementsList, ordName);
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.saveFullOrderToDatabase(elementsList, ordName);
     }
 
     private void deleteOrder() {

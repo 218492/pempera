@@ -124,15 +124,15 @@ public class BestFit {
 
             }else {
                 if (normalObj != null &&
-                        (rotatedObj == null || normalObj.getElement().getDimensions().getDimension_X()
-                        >= rotatedObj.getElement().getDimensions().getDimension_Y())) {
+                        (rotatedObj == null || normalObj.getElement().getDimensions().getX_dimension()
+                        >= rotatedObj.getElement().getDimensions().getY_dimension())) {
                     ElementOnPlate element = new ElementOnPlate();
                     element.setElement(new Element(normalObj.getElement()));
                     element.setPos_x(Double.valueOf(firstIndex));
                     element.setPos_y(Double.valueOf(minVal));
-                    double maxIndexPadding = firstIndex+normalObj.getElement().getDimensions().getDimension_X()+padding > 1999 ? 1999 : firstIndex+normalObj.getElement().getDimensions().getDimension_X()+padding;
+                    double maxIndexPadding = firstIndex+normalObj.getElement().getDimensions().getX_dimension()+padding > 1999 ? 1999 : firstIndex+normalObj.getElement().getDimensions().getX_dimension()+padding;
                     for (int j = firstIndex; j <maxIndexPadding; j++ ){
-                        double valDouble = drawLine[j] + normalObj.getElement().getDimensions().getDimension_Y() + padding;
+                        double valDouble = drawLine[j] + normalObj.getElement().getDimensions().getY_dimension() + padding;
                         drawLine[j] = (int) valDouble;
                     }
                     if (normalObj.getQuantity() > 1 ){
@@ -146,18 +146,18 @@ public class BestFit {
 
                 }else {
                     if (rotatedObj != null &&
-                            (normalObj == null || normalObj.getElement().getDimensions().getDimension_X()
-                                    < rotatedObj.getElement().getDimensions().getDimension_Y())) {
+                            (normalObj == null || normalObj.getElement().getDimensions().getX_dimension()
+                                    < rotatedObj.getElement().getDimensions().getY_dimension())) {
                             ElementOnPlate element = new ElementOnPlate();
                         element.setElement(new Element(rotatedObj.getElement()));
-                        double setX = element.getElement().getDimensions().getDimension_Y();
-                        element.getElement().getDimensions().setDimension_Y(element.getElement().getDimensions().getDimension_X());
-                        element.getElement().getDimensions().setDimension_X(setX);
+                        double setX = element.getElement().getDimensions().getY_dimension();
+                        element.getElement().getDimensions().setY_dimension(element.getElement().getDimensions().getX_dimension());
+                        element.getElement().getDimensions().setX_dimension(setX);
                         element.setPos_x(Double.valueOf(firstIndex));
                         element.setPos_y(Double.valueOf(minVal));
-                        double maxIndexPadding = firstIndex+rotatedObj.getElement().getDimensions().getDimension_Y()+padding > 1999 ? 1999 : firstIndex+rotatedObj.getElement().getDimensions().getDimension_Y()+padding;
+                        double maxIndexPadding = firstIndex+rotatedObj.getElement().getDimensions().getY_dimension()+padding > 1999 ? 1999 : firstIndex+rotatedObj.getElement().getDimensions().getY_dimension()+padding;
                         for (int j = firstIndex; j <maxIndexPadding; j++ ){
-                            double valDouble = drawLine[j] + rotatedObj.getElement().getDimensions().getDimension_X() + padding;
+                            double valDouble = drawLine[j] + rotatedObj.getElement().getDimensions().getX_dimension() + padding;
                             drawLine[j] = (int) valDouble;
                         }
 
@@ -191,8 +191,8 @@ public class BestFit {
 
     public static int getFirstObject(List<ElementWithQuantity> norm, Integer xDim, Integer yDim){
         for(ElementWithQuantity o: norm){
-            if(o.getElement().getDimensions().getDimension_X() <= xDim &&
-                o.getElement().getDimensions().getDimension_Y() <= yDim){
+            if(o.getElement().getDimensions().getX_dimension() <= xDim &&
+                o.getElement().getDimensions().getY_dimension() <= yDim){
                 return norm.indexOf(o);
             }
         }

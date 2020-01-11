@@ -24,15 +24,15 @@ public class ElementSorter implements Comparator<ElementWithQuantity> {
 
     public int byX(ElementWithQuantity o1, ElementWithQuantity o2){
         double this_x, other_x;
-        this_x = o1.getElement().getDimensions().getDimension_X();
-        other_x = o2.getElement().getDimensions().getDimension_X();
+        this_x = o1.getElement().getDimensions().getX_dimension();
+        other_x = o2.getElement().getDimensions().getX_dimension();
         return this_x > other_x ? -1 : this_x < other_x ? 1 : 0;
     }
 
     public int byY(ElementWithQuantity o1, ElementWithQuantity o2){
         double this_y, other_y;
-        this_y = o1.getElement().getDimensions().getDimension_Y();
-        other_y = o2.getElement().getDimensions().getDimension_Y();
+        this_y = o1.getElement().getDimensions().getY_dimension();
+        other_y = o2.getElement().getDimensions().getY_dimension();
         return this_y > other_y ? -1 : this_y < other_y ? 1 : 0;
     }
 }
