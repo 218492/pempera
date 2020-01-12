@@ -6,12 +6,13 @@ import java.awt.event.*;
 
 
 public class MainFrame extends Frame implements WindowListener, ActionListener {
-    private JButton makeOrderButton, loadOrderButton, exitButton;
-    private MakeOrderFrame orderWindow;
+    private JButton makeOrderButton, loadOrdersButton, exitButton;
+    private MakeOrderFrame makeOrderWindow;
+    private ProcessOrdersFrame processOrdersWindow;
 
     public static void main(String[] args){
         MainFrame mainWindow = new MainFrame();
-        mainWindow.setSize(340,75);
+        mainWindow.setSize(400,75);
         mainWindow.setLocation(400,400);
         mainWindow.setVisible(true);
     }
@@ -21,29 +22,38 @@ public class MainFrame extends Frame implements WindowListener, ActionListener {
         setLayout(new FlowLayout());
         addWindowListener(this);
         makeOrderButton = new JButton("Make order");
-        loadOrderButton = new JButton("Load order from database");
+        loadOrdersButton = new JButton("Process multiple orders");
         exitButton = new JButton("Exit");
         add(makeOrderButton);
-        add(loadOrderButton);
+        add(loadOrdersButton);
         add(exitButton);
         makeOrderButton.addActionListener(this);
-        loadOrderButton.addActionListener(this);
+        loadOrdersButton.addActionListener(this);
         exitButton.addActionListener(this);
     }
 
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         switch (command) {
-            case "Load order from database":
-                //load
+            case "Process multiple orders":
+                this.setEnabled(false);
+                processOrdersWindow = new ProcessOrdersFrame();
+                processOrdersWindow.setSize(480,200);
+                processOrdersWindow.setLocation(400,450);
+                processOrdersWindow.setVisible(true);
+                processOrdersWindow.addWindowListener(new WindowAdapter() {
+                    public void windowClosed(WindowEvent e) {
+                        MainFrame.this.setEnabled(true);
+                        MainFrame.this.toFront();
+                    }});
                 break;
             case "Make order":
                 this.setEnabled(false);
-                orderWindow = new MakeOrderFrame();
-                orderWindow.setSize(480,200);
-                orderWindow.setLocation(400,450);
-                orderWindow.setVisible(true);
-                orderWindow.addWindowListener(new WindowAdapter() {
+                makeOrderWindow = new MakeOrderFrame();
+                makeOrderWindow.setSize(480,200);
+                makeOrderWindow.setLocation(400,450);
+                makeOrderWindow.setVisible(true);
+                makeOrderWindow.addWindowListener(new WindowAdapter() {
                     public void windowClosed(WindowEvent e) {
                         MainFrame.this.setEnabled(true);
                         MainFrame.this.toFront();

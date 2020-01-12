@@ -1,8 +1,8 @@
 package com.company.gui;
 
 import com.company.entity.Dimensions;
-import com.company.entity.ElementWithQuantity;
 import com.company.entity.Element;
+import com.company.entity.ElementWithQuantity;
 import com.company.entity.enums.PlateMaterialType;
 import com.company.entity.enums.PlateShape;
 import com.company.entity.enums.PlateThickness;
@@ -14,7 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class AddComponentFrame extends JDialog implements WindowListener, ActionListener, ItemListener{
+public class AddElementFrame extends JDialog implements WindowListener, ActionListener, ItemListener{
 
     private JPanel shapeSelect;
     private JButton addComponent;
@@ -23,14 +23,13 @@ public class AddComponentFrame extends JDialog implements WindowListener, Action
     private JSpinner quantity;
 
     public static void main(String[] args){
-        AddComponentFrame orderWindow = new AddComponentFrame();
+        AddElementFrame orderWindow = new AddElementFrame();
         orderWindow.setSize(440,175);
         orderWindow.setLocation(400,450);
         orderWindow.setVisible(true);
     }
 
-    public AddComponentFrame(){
-        //super("Add Component");
+    public AddElementFrame(){
         setModal(true);
 
         addWindowListener(this);
@@ -63,12 +62,12 @@ public class AddComponentFrame extends JDialog implements WindowListener, Action
         add(addComponent, BorderLayout.PAGE_END);
     }
 
-    public ElementWithQuantity getOrder(){
+    public ElementWithQuantity getElementWithQuantity(){
         return elementWithQuantity;
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand() == "Add component"){
+        if (e.getActionCommand().equals("Add component")){
 
             JPanel shapeCard = null;
             for (Component comp : shapeSelect.getComponents()) {

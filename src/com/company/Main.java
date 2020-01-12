@@ -9,10 +9,6 @@ public class Main {
     public static void main(String[] args) {
 	// write your code here
         DatabaseManager.setDatabaseLocation(fullFilePath);
-
-        MainFrame mainWindow = new MainFrame();
-        mainWindow.setSize(370,75);
-        mainWindow.setLocation(400,400);
-        mainWindow.setVisible(true);
+        MainFrame.main(args);
     }
 }
