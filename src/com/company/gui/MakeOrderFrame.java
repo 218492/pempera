@@ -1,59 +1,45 @@
 package com.company.gui;
 
 import com.company.algorithm.BestFit;
-import com.company.entity.OrderWithQuantity;
+import com.company.entity.ElementWithQuantity;
+import com.company.globaloperations.DatabaseManager;
+import com.company.globaloperations.ElementAssembler;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public class MakeOrderFrame extends Frame implements WindowListener, ActionListener {
 
-    DefaultListModel listModel;
-    JButton addComponentButton, deleteComponentButton, saveOrder, makeOrder, cancelOrder;
-    JTextField orderName;
-    JList componentsList;
-    JLayeredPane topPane, centralList ,centralPane, leftPane;
-    JLabel orderNameLabel, componentsListLabel;
-    JScrollPane scrollList;
-    AddComponentFrame newComponentWindow;
-    java.util.List<OrderWithQuantity> elementsList = new Vector<>();
+    private DefaultListModel listModel;
+    private JButton addComponentButton, deleteComponentButton, saveOrder, processOrder, cancelButton;
+    private JTextField orderName;
+    private JList componentsList;
+    private JLayeredPane topPane, centralList, centralPane;
+    private JLabel orderNameLabel, componentsListLabel;
+    private JScrollPane scrollList;
+    private AddElementFrame newComponentWindow;
+    private List<ElementWithQuantity> elementsList = new ArrayList<>();
 
-    public static void main(String[] args){
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                MakeOrderFrame orderWindow = new MakeOrderFrame();
-                orderWindow.setSize(480,175);
-                orderWindow.setLocation(400,450);
-                orderWindow.setVisible(true);
-            }
-        });
+    private static final String TEMPLATE_ORDERNAME = "type filename";
 
+    private void addNewElement(ElementWithQuantity elementWithQuantity) {
+        if (elementWithQuantity != null) {
+            String elementToDisplay = ElementAssembler.convertElementWithQuantityToString(elementWithQuantity);
+            elementsList.add(elementWithQuantity);
+            listModel.addElement(elementToDisplay);
+        }
     }
 
-    public void addNewOrder(OrderWithQuantity o){
-        String quantity = o.getQuantity().toString();
-        String shape = o.getOrder().getPlateShape().toString();
-        String material = o.getOrder().getPlateMaterialType().toString();
-        String thickness = o.getOrder().getPlateThickness().toString();
-        String dimension = o.getOrder().getDimensions().getDimension_X().toString() +"x" +o.getOrder().getDimensions().getDimension_Y().toString();
-        String elementName = quantity + ", " + shape + ", " + material + ", " + thickness + ", " + dimension;
-        elementsList.add(o);
-        listModel.addElement(elementName);
-    }
-
-    public MakeOrderFrame(){
+    MakeOrderFrame() {
         super("Order Edition");
         setLayout(new BorderLayout());
         addWindowListener(this);
 
-        orderName = new JTextField("type filename",20);
+        orderName = new JTextField(TEMPLATE_ORDERNAME, 20);
         orderNameLabel = new JLabel("Order Name:");
         topPane = new JLayeredPane();
         topPane.setLayout(new FlowLayout());
@@ -69,67 +55,41 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
         centralPane.setLayout(new BoxLayout(centralPane, BoxLayout.PAGE_AXIS));
         centralList = new JLayeredPane();
         centralList.setLayout(new FlowLayout(FlowLayout.LEFT));
-        //centralPane.add(componentsListLabel);
+
         centralList.add(componentsList);
         scrollList = new JScrollPane(centralList);
         centralPane.add(componentsListLabel);
         centralPane.add(scrollList);
         add(centralPane, BorderLayout.CENTER);
-
-        leftPane = new JLayeredPane();
-        //leftPane.setLayout(new BoxLayout(leftPane, BoxLayout.PAGE_AXIS));
-
-
-        //leftPane.add(setButtonLocation());
         add(setButtonLocation(), BorderLayout.LINE_START);
-        addComponentButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addButtonAction();
-                addNewOrder(newComponentWindow.getOrder());
-            }
+        addComponentButton.addActionListener(e -> {
+            addButtonAction();
+            addNewElement(newComponentWindow.getElementWithQuantity());
         });
-        deleteComponentButton.addActionListener(new ActionListener() {
+        deleteComponentButton.addActionListener(e -> deleteOrder());
+        processOrder.addActionListener(e -> bestFitAndDraw());
+        saveOrder.addActionListener(e -> saveToDatabase());
+        cancelButton.addActionListener(e -> dispose());
+        orderName.addFocusListener(new FocusListener(){
             @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteOrder();
+            public void focusGained(FocusEvent e) {
+                if(orderName.getText().equals(TEMPLATE_ORDERNAME)){
+                    orderName.setText("");
+                }
             }
-        });
-        makeOrder.addActionListener(new ActionListener() {
+
             @Override
-            public void actionPerformed(ActionEvent e) {
-                bestFitAndDraw();
-            }
-        });
-        saveOrder.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                saveToFile();
-            }
-        });
-        cancelOrder.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
+            public void focusLost(FocusEvent e) {
+
             }
         });
 
     }
 
-    private void saveToFile() {
-        String text = new String();
-        for(int i = 0; i < listModel.size(); i++){
-            text += listModel.elementAt(i).toString() + "\n";
-        }
-        PrintWriter out = null;
-        try {
-            out = new PrintWriter("orders/" +orderName.getText() + ".txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        out.println(text);
-        out.close();
-        dispose();
+    private void saveToDatabase(){
+        String ordName = orderName.getText();
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.saveFullOrderToDatabase(elementsList, ordName);
     }
 
     private void deleteOrder() {
@@ -145,16 +105,16 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
         newAddWindow();
     }
 
-    private void bestFitAndDraw(){
-        java.util.List<OrderWithQuantity> temp = new Vector<>();
-        for (OrderWithQuantity o : elementsList){
-            temp.add(new OrderWithQuantity(o));
+    private void bestFitAndDraw() {
+        java.util.List<ElementWithQuantity> temp = new Vector<>();
+        for (ElementWithQuantity element : elementsList) {
+            temp.add(new ElementWithQuantity(element));
         }
         BestFit nowy = new BestFit(temp);
 
         OutputPlatesDrawing drawings = new OutputPlatesDrawing(nowy.getPlates());
-        drawings.setSize(1355,745);
-        drawings.setLocation(0,0);
+        drawings.setSize(1355, 745);
+        drawings.setLocation(0, 0);
         drawings.setVisible(true);
     }
 
@@ -162,38 +122,50 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
     }
 
     private void newAddWindow() {
-        newComponentWindow = new AddComponentFrame();
-        newComponentWindow.setSize(440,175);
-        newComponentWindow.setLocation(400,450);
+        newComponentWindow = new AddElementFrame();
+        newComponentWindow.setSize(440, 175);
+        newComponentWindow.setLocation(400, 450);
         newComponentWindow.addWindowListener(this);
         newComponentWindow.setVisible(true);
     }
 
     public void windowClosing(WindowEvent e) {
-        dispose();
-        System.exit(0);
+        if(e.getSource() instanceof MakeOrderFrame){
+            dispose();
+        }
     }
 
-    public void windowOpened(WindowEvent e) {}
-    public void windowActivated(WindowEvent e) {}
-    public void windowIconified(WindowEvent e) {}
-    public void windowDeiconified(WindowEvent e) {}
-    public void windowDeactivated(WindowEvent e) {}
-    public void windowClosed(WindowEvent e) {}
+    public void windowOpened(WindowEvent e) {
+    }
 
-    public JPanel setButtonLocation(){
+    public void windowActivated(WindowEvent e) {
+    }
+
+    public void windowIconified(WindowEvent e) {
+    }
+
+    public void windowDeiconified(WindowEvent e) {
+    }
+
+    public void windowDeactivated(WindowEvent e) {
+    }
+
+    public void windowClosed(WindowEvent e) {
+    }
+
+    private JPanel setButtonLocation() {
         addComponentButton = new JButton("Add element");
         deleteComponentButton = new JButton("Delete element");
-        makeOrder = new JButton("Proccess order");
+        processOrder = new JButton("Proccess order");
         saveOrder = new JButton("Save order");
-        cancelOrder = new JButton("Cancel order");
+        cancelButton = new JButton("Cancel");
         GridBagConstraints c = new GridBagConstraints();
         JPanel panel = new JPanel(new GridBagLayout());
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 1;
         c.gridx = 0;
         c.gridy = 0;
-        panel.add(addComponentButton,c);
+        panel.add(addComponentButton, c);
         c.gridx = 0;
         c.gridy = 1;
         panel.add(deleteComponentButton, c);
@@ -201,7 +173,7 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
         c.weightx = 1;
         c.gridx = 0;
         c.gridy = 2;
-        panel.add(makeOrder, c);
+        panel.add(processOrder, c);
 
         c.gridx = 0;
         c.gridy = 3;
@@ -209,7 +181,7 @@ public class MakeOrderFrame extends Frame implements WindowListener, ActionListe
 
         c.gridx = 0;
         c.gridy = 4;
-        panel.add(cancelOrder, c);
+        panel.add(cancelButton, c);
         return panel;
     }
 }

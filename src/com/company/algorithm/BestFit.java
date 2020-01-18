@@ -16,28 +16,28 @@ import java.util.stream.Collectors;
 
 public class BestFit {
     List<Plate> plates = new Vector<>();
-    List<OrderWithQuantity> galvElem;
+    List<ElementWithQuantity> galvElem;
     Integer[] drawLine = new Integer[2000]; //4000 x 2000
     Integer maxLine = 4000;
     Integer padding = 5;
     public static void  main(String[] args){
-        List<OrderWithQuantity> input = new Vector<>();
-        Order smallRect = new Order();
+        List<ElementWithQuantity> input = new Vector<>();
+        Element smallRect = new Element();
         smallRect.setDimensions(new Dimensions(100.0, 200.0));
         smallRect.setPlateThickness(PlateThickness.THICK);
         smallRect.setPlateMaterialType(PlateMaterialType.GALVANISED);
         smallRect.setPlateShape(PlateShape.RECTANGLE);
-        OrderWithQuantity smallRects = new OrderWithQuantity();
-        smallRects.setOrder(smallRect);
+        ElementWithQuantity smallRects = new ElementWithQuantity();
+        smallRects.setElement(smallRect);
         smallRects.setQuantity(10);
         input.add(smallRects);
-        Order smallRect2 = new Order();
+        Element smallRect2 = new Element();
         smallRect2.setDimensions(new Dimensions(300.0, 100.0));
         smallRect2.setPlateThickness(PlateThickness.THICK);
         smallRect2.setPlateMaterialType(PlateMaterialType.GALVANISED);
         smallRect2.setPlateShape(PlateShape.RECTANGLE);
-        OrderWithQuantity smallRects2 = new OrderWithQuantity();
-        smallRects2.setOrder(smallRect2);
+        ElementWithQuantity smallRects2 = new ElementWithQuantity();
+        smallRects2.setElement(smallRect2);
         smallRects2.setQuantity(10);
         input.add(smallRects2);
 
@@ -45,28 +45,28 @@ public class BestFit {
         nowy.getPlates();
     }
 
-    public BestFit(List<OrderWithQuantity> inputList){
-        galvElem = inputList.stream().filter(p -> p.getOrder().getPlateMaterialType() == PlateMaterialType.GALVANISED && p.getOrder().getPlateThickness() == PlateThickness.THICK).collect(Collectors.toList());
+    public BestFit(List<ElementWithQuantity> inputList){
+        galvElem = inputList.stream().filter(p -> p.getElement().getPlateMaterialType() == PlateMaterialType.GALVANISED && p.getElement().getPlateThickness() == PlateThickness.THICK).collect(Collectors.toList());
         if (!galvElem.isEmpty())
             placeElementsOnPlates( PlateMaterialType.GALVANISED, PlateThickness.THICK);
 
-        galvElem = inputList.stream().filter(p -> p.getOrder().getPlateMaterialType() == PlateMaterialType.GALVANISED && p.getOrder().getPlateThickness() == PlateThickness.THIN).collect(Collectors.toList());
+        galvElem = inputList.stream().filter(p -> p.getElement().getPlateMaterialType() == PlateMaterialType.GALVANISED && p.getElement().getPlateThickness() == PlateThickness.THIN).collect(Collectors.toList());
         if (!galvElem.isEmpty())
             placeElementsOnPlates(PlateMaterialType.GALVANISED, PlateThickness.THIN);
 
-        galvElem = inputList.stream().filter(p -> p.getOrder().getPlateMaterialType() == PlateMaterialType.STAINLESS_STEEL && p.getOrder().getPlateThickness() == PlateThickness.THIN).collect(Collectors.toList());
+        galvElem = inputList.stream().filter(p -> p.getElement().getPlateMaterialType() == PlateMaterialType.STAINLESS_STEEL && p.getElement().getPlateThickness() == PlateThickness.THIN).collect(Collectors.toList());
         if (!galvElem.isEmpty())
             placeElementsOnPlates(PlateMaterialType.STAINLESS_STEEL, PlateThickness.THIN);
 
-        galvElem = inputList.stream().filter(p -> p.getOrder().getPlateMaterialType() == PlateMaterialType.STAINLESS_STEEL && p.getOrder().getPlateThickness() == PlateThickness.THICK).collect(Collectors.toList());
+        galvElem = inputList.stream().filter(p -> p.getElement().getPlateMaterialType() == PlateMaterialType.STAINLESS_STEEL && p.getElement().getPlateThickness() == PlateThickness.THICK).collect(Collectors.toList());
         if (!galvElem.isEmpty())
             placeElementsOnPlates( PlateMaterialType.STAINLESS_STEEL, PlateThickness.THICK);
 
-        galvElem = inputList.stream().filter(p -> p.getOrder().getPlateMaterialType() == PlateMaterialType.ALUMINIUM && p.getOrder().getPlateThickness() == PlateThickness.THIN).collect(Collectors.toList());
+        galvElem = inputList.stream().filter(p -> p.getElement().getPlateMaterialType() == PlateMaterialType.ALUMINIUM && p.getElement().getPlateThickness() == PlateThickness.THIN).collect(Collectors.toList());
         if (!galvElem.isEmpty())
             placeElementsOnPlates(PlateMaterialType.ALUMINIUM, PlateThickness.THIN);
 
-        galvElem = inputList.stream().filter(p -> p.getOrder().getPlateMaterialType() == PlateMaterialType.ALUMINIUM && p.getOrder().getPlateThickness() == PlateThickness.THICK).collect(Collectors.toList());
+        galvElem = inputList.stream().filter(p -> p.getElement().getPlateMaterialType() == PlateMaterialType.ALUMINIUM && p.getElement().getPlateThickness() == PlateThickness.THICK).collect(Collectors.toList());
         if (!galvElem.isEmpty())
             placeElementsOnPlates(PlateMaterialType.ALUMINIUM, PlateThickness.THICK);
     }
@@ -84,18 +84,18 @@ public class BestFit {
             Integer lastIndex = getMaxWidth(firstIndex, drawLine);
             Integer xMaxDim = lastIndex-firstIndex;
             Integer yMaxDim = maxLine - minVal;
-            List<OrderWithQuantity> norm = galvElem.stream().collect(Collectors.toList());
-            norm.sort(OrderWithQuantity.SORT_BY_X);
-            List <OrderWithQuantity> rot = galvElem.stream().collect(Collectors.toList());
-            rot.sort(OrderWithQuantity.SORT_BY_Y);
+            List<ElementWithQuantity> norm = galvElem.stream().collect(Collectors.toList());
+            norm.sort(ElementWithQuantity.SORT_BY_X);
+            List <ElementWithQuantity> rot = galvElem.stream().collect(Collectors.toList());
+            rot.sort(ElementWithQuantity.SORT_BY_Y);
 
             int index = getFirstObject(norm,xMaxDim,yMaxDim);
-            OrderWithQuantity normalObj = null;
+            ElementWithQuantity normalObj = null;
             if (index > -1) {
                 normalObj = norm.get(index);
             }
             index = getFirstObject(rot,yMaxDim,xMaxDim);
-            OrderWithQuantity rotatedObj = null;
+            ElementWithQuantity rotatedObj = null;
             if (index > -1) {
                 rotatedObj = rot.get(index);
             }
@@ -124,15 +124,15 @@ public class BestFit {
 
             }else {
                 if (normalObj != null &&
-                        (rotatedObj == null || normalObj.getOrder().getDimensions().getDimension_X()
-                        >= rotatedObj.getOrder().getDimensions().getDimension_Y())) {
+                        (rotatedObj == null || normalObj.getElement().getDimensions().getX_dimension()
+                        >= rotatedObj.getElement().getDimensions().getY_dimension())) {
                     ElementOnPlate element = new ElementOnPlate();
-                    element.setElement(new Order(normalObj.getOrder()));
+                    element.setElement(new Element(normalObj.getElement()));
                     element.setPos_x(Double.valueOf(firstIndex));
                     element.setPos_y(Double.valueOf(minVal));
-                    double maxIndexPadding = firstIndex+normalObj.getOrder().getDimensions().getDimension_X()+padding > 1999 ? 1999 : firstIndex+normalObj.getOrder().getDimensions().getDimension_X()+padding;
+                    double maxIndexPadding = firstIndex+normalObj.getElement().getDimensions().getX_dimension()+padding > 1999 ? 1999 : firstIndex+normalObj.getElement().getDimensions().getX_dimension()+padding;
                     for (int j = firstIndex; j <maxIndexPadding; j++ ){
-                        double valDouble = drawLine[j] + normalObj.getOrder().getDimensions().getDimension_Y() + padding;
+                        double valDouble = drawLine[j] + normalObj.getElement().getDimensions().getY_dimension() + padding;
                         drawLine[j] = (int) valDouble;
                     }
                     if (normalObj.getQuantity() > 1 ){
@@ -146,18 +146,18 @@ public class BestFit {
 
                 }else {
                     if (rotatedObj != null &&
-                            (normalObj == null || normalObj.getOrder().getDimensions().getDimension_X()
-                                    < rotatedObj.getOrder().getDimensions().getDimension_Y())) {
+                            (normalObj == null || normalObj.getElement().getDimensions().getX_dimension()
+                                    < rotatedObj.getElement().getDimensions().getY_dimension())) {
                             ElementOnPlate element = new ElementOnPlate();
-                        element.setElement(new Order(rotatedObj.getOrder()));
-                        double setX = element.getElement().getDimensions().getDimension_Y();
-                        element.getElement().getDimensions().setDimension_Y(element.getElement().getDimensions().getDimension_X());
-                        element.getElement().getDimensions().setDimension_X(setX);
+                        element.setElement(new Element(rotatedObj.getElement()));
+                        double setX = element.getElement().getDimensions().getY_dimension();
+                        element.getElement().getDimensions().setY_dimension(element.getElement().getDimensions().getX_dimension());
+                        element.getElement().getDimensions().setX_dimension(setX);
                         element.setPos_x(Double.valueOf(firstIndex));
                         element.setPos_y(Double.valueOf(minVal));
-                        double maxIndexPadding = firstIndex+rotatedObj.getOrder().getDimensions().getDimension_Y()+padding > 1999 ? 1999 : firstIndex+rotatedObj.getOrder().getDimensions().getDimension_Y()+padding;
+                        double maxIndexPadding = firstIndex+rotatedObj.getElement().getDimensions().getY_dimension()+padding > 1999 ? 1999 : firstIndex+rotatedObj.getElement().getDimensions().getY_dimension()+padding;
                         for (int j = firstIndex; j <maxIndexPadding; j++ ){
-                            double valDouble = drawLine[j] + rotatedObj.getOrder().getDimensions().getDimension_X() + padding;
+                            double valDouble = drawLine[j] + rotatedObj.getElement().getDimensions().getX_dimension() + padding;
                             drawLine[j] = (int) valDouble;
                         }
 
@@ -189,10 +189,10 @@ public class BestFit {
         return minValue;
     }
 
-    public static int getFirstObject(List<OrderWithQuantity> norm, Integer xDim, Integer yDim){
-        for(OrderWithQuantity o: norm){
-            if(o.getOrder().getDimensions().getDimension_X() <= xDim &&
-                o.getOrder().getDimensions().getDimension_Y() <= yDim){
+    public static int getFirstObject(List<ElementWithQuantity> norm, Integer xDim, Integer yDim){
+        for(ElementWithQuantity o: norm){
+            if(o.getElement().getDimensions().getX_dimension() <= xDim &&
+                o.getElement().getDimensions().getY_dimension() <= yDim){
                 return norm.indexOf(o);
             }
         }

@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 
 public class ElementOnPlate {
-    Order  element;
+    Element element;
     Double pos_x, pos_y;
 }

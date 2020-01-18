@@ -22,8 +22,8 @@ public class PlateCard extends JPanel {
         g.drawRect(0,0,4000/3,2000/3);
         for (ElementOnPlate e : plate.elements){
             g.drawRect(e.getPos_y().intValue()/3,e.getPos_x().intValue()/3,
-                    e.getElement().getDimensions().getDimension_Y().intValue()/3,
-                    e.getElement().getDimensions().getDimension_X().intValue()/3);
+                    e.getElement().getDimensions().getY_dimension().intValue()/3,
+                    e.getElement().getDimensions().getX_dimension().intValue()/3);
         }
 
     }
