@@ -2,26 +2,28 @@ package com.company.gui;
 
 import com.company.entity.ElementWithQuantity;
 import com.company.entity.Order;
+import com.company.globaloperations.DatabaseManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class ProcessOrdersFrame extends Frame implements WindowListener, ActionListener {
 
     private DefaultListModel listModel;
-    private JButton addComponentButton, deleteComponentButton, processOrders, cancelButton;
+    private JButton addComponentButton, deleteComponentButton, processOrders, cancelButton, saveNewOrder;
     private JList componentsList;
+    private JTextField newOrderName;
     private JLayeredPane topPane, centralList, centralPane;
-    private JLabel componentsListLabel;
+    private JLabel componentsListLabel, newOrderNameLabel;
     private JScrollPane scrollList;
     private AddElementFrame addElementWindow;
     private List<Order> elementsList = new ArrayList<>();
+
+    private static final String TEMPLATE_ORDERNAME = "type filename";
 
     //TODO WASILEWSKI addNewOrder
     private void addNewElement(ElementWithQuantity elementWithQuantity) {
@@ -37,9 +39,13 @@ public class ProcessOrdersFrame extends Frame implements WindowListener, ActionL
         setLayout(new BorderLayout());
         addWindowListener(this);
 
+        newOrderName = new JTextField(TEMPLATE_ORDERNAME, 20);
+        newOrderNameLabel = new JLabel("Order Name:");
         topPane = new JLayeredPane();
         topPane.setLayout(new FlowLayout());
 
+        topPane.add(newOrderNameLabel);
+        topPane.add(newOrderName);
         add(topPane, BorderLayout.PAGE_START);
 
         componentsListLabel = new JLabel("Orders to process:");
@@ -60,9 +66,23 @@ public class ProcessOrdersFrame extends Frame implements WindowListener, ActionL
             addButtonAction();
             addNewElement(addElementWindow.getElementWithQuantity());
         });
+        saveNewOrder.addActionListener(e -> saveToDatabase());
         deleteComponentButton.addActionListener(e -> deleteOrder());
         processOrders.addActionListener(e -> bestFitAndDraw());
         cancelButton.addActionListener(e -> dispose());
+        newOrderName.addFocusListener(new FocusListener(){
+            @Override
+            public void focusGained(FocusEvent e) {
+                if(newOrderName.getText().equals(TEMPLATE_ORDERNAME)){
+                    newOrderName.setText("");
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+
+            }
+        });
     }
 
     private void deleteOrder() {
@@ -90,6 +110,14 @@ public class ProcessOrdersFrame extends Frame implements WindowListener, ActionL
 //        drawings.setSize(1355, 745);
 //        drawings.setLocation(0, 0);
 //        drawings.setVisible(true);
+    }
+    //TODO konwersja ORDER na ELEMENTS WITH QUANTITY
+    private void saveToDatabase(){
+        String ordName = newOrderName.getText();
+        DatabaseManager databaseManager = new DatabaseManager();
+        List<ElementWithQuantity> elementsListToSave = new Vector<>();
+
+        databaseManager.saveFullOrderToDatabase(elementsListToSave, ordName);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -130,6 +158,7 @@ public class ProcessOrdersFrame extends Frame implements WindowListener, ActionL
     private JPanel setButtonLocation() {
         addComponentButton = new JButton("Add order");
         deleteComponentButton = new JButton("Delete order");
+        saveNewOrder = new JButton("Save as new order");
         processOrders = new JButton("Proccess order");
         cancelButton = new JButton("Cancel");
         GridBagConstraints c = new GridBagConstraints();
@@ -147,6 +176,10 @@ public class ProcessOrdersFrame extends Frame implements WindowListener, ActionL
         c.gridx = 0;
         c.gridy = 2;
         panel.add(processOrders, c);
+
+        c.gridx = 0;
+        c.gridy = 3;
+        panel.add(saveNewOrder, c);
 
         c.gridx = 0;
         c.gridy = 4;
