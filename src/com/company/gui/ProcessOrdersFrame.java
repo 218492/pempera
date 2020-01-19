@@ -1,5 +1,6 @@
 package com.company.gui;
 
+import com.company.algorithm.BestFit;
 import com.company.entity.ElementWithQuantity;
 import com.company.entity.Order;
 import com.company.globaloperations.DatabaseManager;
@@ -20,18 +21,18 @@ public class ProcessOrdersFrame extends Frame implements WindowListener, ActionL
     private JLayeredPane topPane, centralList, centralPane;
     private JLabel componentsListLabel, newOrderNameLabel;
     private JScrollPane scrollList;
-    private AddElementFrame addElementWindow;
+    private AddOrderFrame addOrderWindow;
     private List<Order> elementsList = new ArrayList<>();
 
     private static final String TEMPLATE_ORDERNAME = "type filename";
 
     //TODO WASILEWSKI addNewOrder
-    private void addNewElement(ElementWithQuantity elementWithQuantity) {
-//        if (elementWithQuantity != null) {
-//            String elementToDisplay = ElementAssembler.convertElementWithQuantityToString(elementWithQuantity);
-//            elementsList.add(elementWithQuantity);
-//            listModel.addElement(elementToDisplay);
-//        }
+    private void addNewOrder(Order order) {
+          if (order != null) {
+              String orderToDisplay = order.getName();
+              elementsList.add(order);
+              listModel.addElement(orderToDisplay);
+          }
     }
 
     ProcessOrdersFrame() {
@@ -64,7 +65,7 @@ public class ProcessOrdersFrame extends Frame implements WindowListener, ActionL
         add(setButtonLocation(), BorderLayout.LINE_START);
         addComponentButton.addActionListener(e -> {
             addButtonAction();
-            addNewElement(addElementWindow.getElementWithQuantity());
+            addNewOrder(addOrderWindow.getOrder());
         });
         saveNewOrder.addActionListener(e -> saveToDatabase());
         deleteComponentButton.addActionListener(e -> deleteOrder());
@@ -100,23 +101,28 @@ public class ProcessOrdersFrame extends Frame implements WindowListener, ActionL
 
     //TODO poprawic
     private void bestFitAndDraw() {
-//        java.util.List<ElementWithQuantity> temp = new Vector<>();
-//        for (ElementWithQuantity o : elementsList) {
-//            temp.add(new ElementWithQuantity(o));
-//        }
-//        BestFit nowy = new BestFit(temp);
-//
-//        OutputPlatesDrawing drawings = new OutputPlatesDrawing(nowy.getPlates());
-//        drawings.setSize(1355, 745);
-//        drawings.setLocation(0, 0);
-//        drawings.setVisible(true);
+        List<ElementWithQuantity> elementsListToShow = new Vector<>();
+        for (Order o : elementsList){
+            DatabaseManager databaseManager = new DatabaseManager();
+            elementsListToShow.addAll(databaseManager.getElementsListFromOrder(o.getId()));
+        }
+        BestFit nowy = new BestFit(elementsListToShow);
+
+        OutputPlatesDrawing drawings = new OutputPlatesDrawing(nowy.getPlates());
+        drawings.setSize(1355, 745);
+        drawings.setLocation(0, 0);
+        drawings.setVisible(true);
     }
     //TODO konwersja ORDER na ELEMENTS WITH QUANTITY
     private void saveToDatabase(){
         String ordName = newOrderName.getText();
-        DatabaseManager databaseManager = new DatabaseManager();
         List<ElementWithQuantity> elementsListToSave = new Vector<>();
+        for (Order o : elementsList){
+            DatabaseManager databaseManager = new DatabaseManager();
+            elementsListToSave.addAll(databaseManager.getElementsListFromOrder(o.getId()));
+        }
 
+        DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.saveFullOrderToDatabase(elementsListToSave, ordName);
     }
 
@@ -124,11 +130,11 @@ public class ProcessOrdersFrame extends Frame implements WindowListener, ActionL
     }
 
     private void newAddWindow() {
-        addElementWindow = new AddElementFrame();
-        addElementWindow.setSize(440, 175);
-        addElementWindow.setLocation(400, 450);
-        addElementWindow.addWindowListener(this);
-        addElementWindow.setVisible(true);
+        addOrderWindow = new AddOrderFrame();
+        addOrderWindow.setSize(340, 100);
+        addOrderWindow.setLocation(400, 450);
+        addOrderWindow.addWindowListener(this);
+        addOrderWindow.setVisible(true);
     }
 
     public void windowClosing(WindowEvent e) {
