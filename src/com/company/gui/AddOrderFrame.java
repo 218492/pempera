@@ -9,7 +9,6 @@ import java.awt.event.*;
 
 public class AddOrderFrame extends JDialog implements WindowListener, ActionListener, ItemListener{
 
-    private JPanel orderSelect;
     private JButton addComponent;
     private Order order;
 
@@ -36,6 +35,10 @@ public class AddOrderFrame extends JDialog implements WindowListener, ActionList
         addComponent = new JButton("Add order");
         addComponent.addActionListener(this);
         add(addComponent, BorderLayout.PAGE_END);
+        {
+            DatabaseManager databaseManager = new DatabaseManager();
+            order = databaseManager.findOrder((String) orderChoose.getItemAt(0));
+        }
     }
 
     public String[] getAllOrders(){
