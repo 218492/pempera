@@ -1,8 +1,12 @@
 package com.company.globaloperations;
 
+import com.company.entity.Dimensions;
 import com.company.entity.Element;
 import com.company.entity.ElementWithQuantity;
 import com.company.entity.Order;
+import com.company.entity.enums.PlateMaterialType;
+import com.company.entity.enums.PlateShape;
+import com.company.entity.enums.PlateThickness;
 import com.company.exception.DataManipulationException;
 import com.company.exception.WrongDataException;
 
@@ -11,6 +15,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Vector;
 
 public class DatabaseManager {
     private static String fullFilePath;
@@ -104,6 +109,27 @@ public class DatabaseManager {
         }
     }
 
+    public String[] loadAllOrders() {
+        String sql = "SELECT * FROM orders";
+
+        List<String> listOr = new Vector<>();
+        try {
+            Statement stmt = this.conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while(rs.next()){
+                listOr.add(rs.getString("name"));
+            }
+            stmt.close();
+            rs.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        String[] orders = new String[listOr.size()];
+        orders = listOr.toArray(orders);
+        return orders;
+    }
+
     public Order findOrder(String name) {
         String sql = "SELECT * FROM orders where name='" + name + "';";
         Order order = null;
@@ -111,10 +137,13 @@ public class DatabaseManager {
         try {
             Statement stmt = this.conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-
-            order = new Order();
-            order.setId(rs.getInt("id"));
-            order.setName(rs.getString("name"));
+            if(rs.next()) {
+                order = new Order();
+                order.setId(rs.getInt("id"));
+                order.setName(rs.getString("name"));
+            }
+            stmt.close();
+            rs.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -139,11 +168,41 @@ public class DatabaseManager {
             ResultSet rs = stmt.executeQuery(sql);
 
             element.setId(rs.getInt("id"));
+            stmt.close();
+            rs.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
 
         return element;
+    }
+
+    public List<ElementWithQuantity> getElementsListFromOrder(Integer orderId){
+        String sql = "SELECT * FROM orders_elements where order_id='" + orderId + "';";
+        List<ElementWithQuantity> elementsList = new Vector<>();
+        try {
+            Statement stmt = this.conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while (rs.next()==true) {
+                Integer el_id = rs.getInt("element_id");
+                Integer q = rs.getInt("quantity");
+
+                Statement stmt2 = this.conn.createStatement();
+                ResultSet el = stmt2.executeQuery("SELECT * FROM elements WHERE id ='" + el_id + "';");
+                while (el.next()){
+                elementsList.add(new ElementWithQuantity(new Element(PlateShape.valueOf(el.getString( "shape")), PlateMaterialType.valueOf(el.getString( "material"))   ,
+                        PlateThickness.valueOf(el.getString( "thickness")), new Dimensions(el.getDouble( "x_dimension"), el.getDouble( "y_dimension"))   ), q));
+                }
+                stmt2.close();
+                el.close();
+            }
+            stmt.close();
+            rs.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return elementsList;
     }
 
     public void saveOrderToDatabase(String orderName) {
@@ -155,6 +214,7 @@ public class DatabaseManager {
                 PreparedStatement pstmt = this.conn.prepareStatement(sql);
                 pstmt.setString(1, orderName);
                 pstmt.executeUpdate();
+                pstmt.close();
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
@@ -183,8 +243,9 @@ public class DatabaseManager {
     public void removeElementOrderConnections(Integer orderId) {
         String sql = "DELETE FROM orders_elements where order_id=" + orderId + ";";
         try {
-            Statement stmt = this.conn.createStatement();
-            stmt.executeQuery(sql);
+            PreparedStatement pstmt = this.conn.prepareStatement(sql);
+            pstmt.executeUpdate();
+            pstmt.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -198,6 +259,7 @@ public class DatabaseManager {
             pstmt.setInt(2, elementId);
             pstmt.setInt(3, quantity);
             pstmt.executeUpdate();
+            pstmt.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
