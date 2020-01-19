@@ -24,10 +24,9 @@ public class AddOrderFrame extends JDialog implements WindowListener, ActionList
         setModal(true);
 
         addWindowListener(this);
-        DatabaseManager databaseManager = new DatabaseManager();
 
         JPanel comboBoxShape = new JPanel();
-        String[] comboBoxItems = databaseManager.loadAllOrders();
+        String[] comboBoxItems = getAllOrders();
         JComboBox orderChoose = new JComboBox(comboBoxItems);
         orderChoose.setEditable(false);
         orderChoose.addItemListener(this);
@@ -37,6 +36,11 @@ public class AddOrderFrame extends JDialog implements WindowListener, ActionList
         addComponent = new JButton("Add order");
         addComponent.addActionListener(this);
         add(addComponent, BorderLayout.PAGE_END);
+    }
+
+    public String[] getAllOrders(){
+        DatabaseManager databaseManager = new DatabaseManager();
+        return databaseManager.loadAllOrders();
     }
 
     public Order getOrder(){

@@ -116,13 +116,11 @@ public class ProcessOrdersFrame extends Frame implements WindowListener, ActionL
     //TODO konwersja ORDER na ELEMENTS WITH QUANTITY
     private void saveToDatabase(){
         String ordName = newOrderName.getText();
+        DatabaseManager databaseManager = new DatabaseManager();
         List<ElementWithQuantity> elementsListToSave = new Vector<>();
         for (Order o : elementsList){
-            DatabaseManager databaseManager = new DatabaseManager();
             elementsListToSave.addAll(databaseManager.getElementsListFromOrder(o.getId()));
         }
-
-        DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.saveFullOrderToDatabase(elementsListToSave, ordName);
     }
 
