@@ -6,13 +6,14 @@ import java.awt.event.*;
 
 
 public class MainFrame extends Frame implements WindowListener, ActionListener {
-    private JButton makeOrderButton, loadOrdersButton, exitButton;
+    private JButton makeOrderButton, loadOrdersButton, modifyOrderButton, exitButton;
     private MakeOrderFrame makeOrderWindow;
     private ProcessOrdersFrame processOrdersWindow;
+    private ModifyOrDeleteOrderFrame modifyWindow;
 
     public static void main(String[] args){
         MainFrame mainWindow = new MainFrame();
-        mainWindow.setSize(400,75);
+        mainWindow.setSize(520,75);
         mainWindow.setLocation(400,400);
         mainWindow.setVisible(true);
     }
@@ -23,12 +24,15 @@ public class MainFrame extends Frame implements WindowListener, ActionListener {
         addWindowListener(this);
         makeOrderButton = new JButton("Make order");
         loadOrdersButton = new JButton("Process multiple orders");
+        modifyOrderButton = new JButton("Modify single order");
         exitButton = new JButton("Exit");
         add(makeOrderButton);
         add(loadOrdersButton);
+        add(modifyOrderButton);
         add(exitButton);
         makeOrderButton.addActionListener(this);
         loadOrdersButton.addActionListener(this);
+        modifyOrderButton.addActionListener(this);
         exitButton.addActionListener(this);
     }
 
@@ -59,6 +63,20 @@ public class MainFrame extends Frame implements WindowListener, ActionListener {
                         MainFrame.this.toFront();
                     }});
                 break;
+
+            case "Modify single order":
+                this.setEnabled(false);
+                modifyWindow = new ModifyOrDeleteOrderFrame();
+                modifyWindow.setSize(480,220);
+                modifyWindow.setLocation(400,450);
+                modifyWindow.setVisible(true);
+                modifyWindow.addWindowListener(new WindowAdapter() {
+                    public void windowClosed(WindowEvent e) {
+                        MainFrame.this.setEnabled(true);
+                        MainFrame.this.toFront();
+                    }});
+                break;
+
             case "Exit":
                 dispose();
                 System.exit(0);

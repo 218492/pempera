@@ -251,6 +251,17 @@ public class DatabaseManager {
         }
     }
 
+    public void removeOrder(Integer orderId) {
+        String sql = "DELETE FROM orders where id=" + orderId + ";";
+        try {
+            PreparedStatement pstmt = this.conn.prepareStatement(sql);
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public void attachElementToOrder(Integer orderId, Integer elementId, Integer quantity) {
         String sql = "INSERT INTO orders_elements(order_id, element_id, quantity) VALUES(?,?,?);";
         try {

@@ -26,7 +26,6 @@ public class ProcessOrdersFrame extends Frame implements WindowListener, ActionL
 
     private static final String TEMPLATE_ORDERNAME = "type filename";
 
-    //TODO WASILEWSKI addNewOrder
     private void addNewOrder(Order order) {
           if (order != null) {
               String orderToDisplay = order.getName();
@@ -99,7 +98,6 @@ public class ProcessOrdersFrame extends Frame implements WindowListener, ActionL
         newAddWindow();
     }
 
-    //TODO poprawic
     private void bestFitAndDraw() {
         List<ElementWithQuantity> elementsListToShow = new Vector<>();
         for (Order o : elementsList){
@@ -113,7 +111,7 @@ public class ProcessOrdersFrame extends Frame implements WindowListener, ActionL
         drawings.setLocation(0, 0);
         drawings.setVisible(true);
     }
-    //TODO konwersja ORDER na ELEMENTS WITH QUANTITY
+
     private void saveToDatabase(){
         String ordName = newOrderName.getText();
         DatabaseManager databaseManager = new DatabaseManager();
